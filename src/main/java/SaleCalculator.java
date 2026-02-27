@@ -1,5 +1,4 @@
 import java.math.BigDecimal;
-import java.util.Formatter.BigDecimalLayoutForm;
 
 public class SaleCalculator {
     private BigDecimal purchasePrice;
@@ -8,7 +7,7 @@ public class SaleCalculator {
 
     public SaleCalculator(Share share) {
         this.purchasePrice = share.getPurchasePrice();
-        this.salesPrice = salesPrice; // Ask about this one...
+        this.salesPrice = share.getStock().getSalesPrice(); 
         this.quantity = share.getQuantity();
     }
 
