@@ -1,6 +1,6 @@
 import java.math.BigDecimal;
 
-public class PurchaseCalculator {
+public class PurchaseCalculator implements TransactionCalculator {
     private BigDecimal purchasePrice;
     private BigDecimal quantity;
     
