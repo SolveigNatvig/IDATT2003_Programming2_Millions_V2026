@@ -1,11 +1,10 @@
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
 
 public class ExchangeTest {
 
@@ -13,7 +12,7 @@ public class ExchangeTest {
     private Stock apple;
     private Stock google;
 
-    @Before
+    @BeforeAll
     public void setUp() {
         apple = new Stock("AAPL", "Apple", new BigDecimal("100"));
         google = new Stock("GOOGL", "Google", new BigDecimal("200"));

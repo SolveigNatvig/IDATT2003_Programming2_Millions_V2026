@@ -1,8 +1,7 @@
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
-
-import org.junit.Test;
 
 
 public class StockTest {
