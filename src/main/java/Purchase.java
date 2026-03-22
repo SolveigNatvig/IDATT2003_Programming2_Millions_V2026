@@ -7,14 +7,14 @@ public class Purchase extends Transaction {
 
     @Override
     public void commit(Player player) {
-        BigDecimal price = this.getShare().getPurchasePrice();
+        BigDecimal price = this.getCalculator().calculateTotal();
 
         if (isCommitted() || (player.getMoney().compareTo(price) < 0)) {
             return;
         }
 
         player.withdrawMoney(price);
-        player.getPortfolio().addShare(getShare());
+        player.getPortfolio().addShare(this.getShare());
         player.getTransactionArchive().add(this);
         
         this.committed = true;
