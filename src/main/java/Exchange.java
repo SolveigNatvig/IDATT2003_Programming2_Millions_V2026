@@ -41,11 +41,12 @@ public class Exchange {
     }
 
     public List<Stock> findStocks(String searchTerm) {
-            List<Stock> result = new ArrayList<>();
+        List<Stock> result = new ArrayList<>();
+        String lowerSearch = searchTerm.toLowerCase();
 
         for (Stock stock : stockMap.values()) {
-            if (stock.getSymbol().contains(searchTerm)
-                    || stock.getCompany().contains(searchTerm)) {
+            if (stock.getSymbol().toLowerCase().contains(lowerSearch)
+                    || stock.getCompany().toLowerCase().contains(lowerSearch)) {
                 result.add(stock);
             }
         }
@@ -53,13 +54,40 @@ public class Exchange {
         return result;
         }
 
-    // public Transaction buy(String symbol, BigDecimal quantity, Player player) {
-    //     return;
-    // }
+    public Transaction buy(String symbol, BigDecimal quantity, Player player) {
+        Stock stock = getStock(symbol);
+        
+         // unngå nullpointerexception
+        if (stock == null) {
+            return null; 
+        }
 
-    // public Transaction sell(Share share, Player player) {
-    //     return;
-    // }
+        // lager en ny "andel" basert på nåværende salgspris
+        Share shareToBuy = new Share(stock, quantity, stock.getSalesPrice());
+        
+        // oppretter kjøpstransaksjonen for den uka
+        Purchase purchase = new Purchase(shareToBuy, this.week);
+        
+        // committer til player
+        purchase.commit(player);
+        
+        return purchase;
+    }
+
+    public Transaction sell(Share share, Player player) {
+        // unngå nullpointerexception
+        if (share == null) {
+            return null;
+        }
+
+        // oppretter salgstransaksjonen for den uka
+        Sale sale = new Sale(share, this.week);
+        
+        // commiter til player
+        sale.commit(player);
+        
+        return sale;
+    }
 
     public void advance() {
         
