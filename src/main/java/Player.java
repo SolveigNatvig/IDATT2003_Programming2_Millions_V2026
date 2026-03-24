@@ -24,11 +24,11 @@ public class Player {
     }
 
     public void addMoney(BigDecimal amount) {
-        this.money.add(amount);
+        this.money = this.money.add(amount);
     }
 
     public void withdrawMoney(BigDecimal amount) {
-        this.money.subtract(amount);
+        this.money = this.money.subtract(amount);
     }
 
     public Portfolio getPortfolio() {
