@@ -30,4 +30,28 @@ public class Stock {
     public void addNewSalesPrice(BigDecimal price) {
         prices.add(price);
     }
+
+    public List<BigDecimal> getHistoricalPrices() {
+        return new ArrayList<>(prices); // returnerer en kopi for å beskytte selve listen
+    }
+
+    public BigDecimal getHighestPrice() {
+        return prices.stream()
+            .reduce(prices.get(0), BigDecimal::max);
+    }
+
+    public BigDecimal getLowestPrice() {
+        return prices.stream()
+            .reduce(prices.get(0), BigDecimal::min);
+    }
+
+    public BigDecimal getLatestPriceChange() {
+        if (prices.size() < 2) {
+            return BigDecimal.ZERO;
+        }
+
+        BigDecimal latest = prices.get(prices.size() - 1);
+        BigDecimal previous = prices.get(prices.size() - 2);
+        return latest.subtract(previous);
+    }
 }
