@@ -5,6 +5,11 @@ import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import Model.Player;
+import Model.Purchase;
+import Model.Share;
+import Model.Stock;
+
 public class PurchaseTest {
     Stock stock;
     Share share;

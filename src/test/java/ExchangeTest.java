@@ -1,5 +1,9 @@
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import Model.Exchange;
+import Model.Stock;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;

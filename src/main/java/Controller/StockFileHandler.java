@@ -1,8 +1,11 @@
+package Controller;
 import java.nio.file.*;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import Model.Stock;
 
 public class StockFileHandler {
 
