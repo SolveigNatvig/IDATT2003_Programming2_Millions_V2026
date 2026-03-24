@@ -1,3 +1,4 @@
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,15 @@ public class Portfolio {
 
     public boolean contains(Share share) {
         return shares.contains(share);
+    }
+
+    public BigDecimal getNetWorth() {
+        BigDecimal total = BigDecimal.ZERO;
+        for (Share share : shares) {
+            SaleCalculator calc = new SaleCalculator(share);
+            total = total.add(calc.calculateTotal());
+        }
+        return total;
     }
     
 }
