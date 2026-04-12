@@ -1,3 +1,4 @@
+package Model;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -109,6 +110,17 @@ public class Exchange {
         }
     }
 
+    public List<Stock> getGainers(int limit) { // viser "vinnerne"
+        return stockMap.values().stream()
+            .sorted((stock1, stock2) -> stock2.getLatestPriceChange().compareTo(stock1.getLatestPriceChange())) 
+            .limit(limit)
+            .toList();
+    }
 
-
+    public List<Stock> getLosers(int limit) { // viser "taperne"
+        return stockMap.values().stream()
+            .sorted((stock1, stock2) -> stock1.getLatestPriceChange().compareTo(stock2.getLatestPriceChange()))
+            .limit(limit)
+            .toList();
+    }
 }

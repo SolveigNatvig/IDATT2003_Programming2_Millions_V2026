@@ -1,6 +1,10 @@
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
+
+import Model.Share;
+import Model.Stock;
+
 import java.math.BigDecimal;
 
 

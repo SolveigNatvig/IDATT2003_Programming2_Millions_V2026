@@ -1,3 +1,4 @@
+package Model;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.List;

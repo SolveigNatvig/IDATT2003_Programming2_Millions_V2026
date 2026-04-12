@@ -1,3 +1,4 @@
+package Model;
 public abstract class Transaction {
     private Share share;
     private int week;
