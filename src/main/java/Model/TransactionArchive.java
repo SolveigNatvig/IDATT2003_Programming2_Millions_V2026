@@ -28,11 +28,15 @@ public class TransactionArchive {
     }
 
     public List<Purchase> getPurchase(int week) {
-        return transactions.stream().filter(transaction -> transaction.getWeek() == week).filter(purchase -> transactions instanceof Purchase).map(transaction -> (Purchase) transaction).collect(Collectors.toList());
+        return transactions.stream().filter(transaction -> transaction.getWeek() == week).filter(purchase -> purchase instanceof Purchase).map(transaction -> (Purchase) transaction).collect(Collectors.toList());
     }
 
     public List<Sale> getSale(int week) {
-        return transactions.stream().filter(transaction -> transaction.getWeek() == week).filter(sale -> transactions instanceof Sale).map(transaction -> (Sale) transaction).collect(Collectors.toList());
+        return transactions.stream().filter(transaction -> transaction.getWeek() == week).filter(sale -> sale instanceof Sale).map(transaction -> (Sale) transaction).collect(Collectors.toList());
+    }
+
+    public List<Transaction> getAllTransactions() {
+        return new ArrayList<>(transactions);
     }
 
     public int countDistinctWeeks() {
