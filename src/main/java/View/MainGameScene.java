@@ -289,6 +289,21 @@ public class MainGameScene implements ExchangeObserver {
 
         updateHoldingsList(holdingsList);
 
+        // Antall Rad
+        HBox quantityRow = new HBox(8);
+        quantityRow.setAlignment(Pos.CENTER_LEFT);
+        TextField quantityField = new TextField();
+        quantityField.setPromptText("Antall");
+        quantityField.setPrefWidth(120);
+        quantityRow.getChildren().addAll(new Label("Quantity to sell:"), quantityField);
+
+        // Fyll inn maks anntall automatisk når man velger en holding
+        holdingsList.getSelectionModel().selectedItemProperty().addListener((obs, old, selected) -> {
+            if (selected != null) {
+                quantityField.setText(selected.getQuantity().toPlainString());
+            }
+        });
+
         Button sellBtn = new Button("Sell Selected");
         sellBtn.setOnAction(e -> {
             Share selected = holdingsList.getSelectionModel().getSelectedItem();
@@ -296,15 +311,33 @@ public class MainGameScene implements ExchangeObserver {
                 alert("Error", "Select a holding to sell");
                 return;
             }
-            Transaction trans = exchange.sell(selected, player); // observer fires refresh
-            if (trans != null && trans.isCommitted()) {
-                showConfirmation("Sale successful", trans);
-            } else {
-                alert("Failed", "Could not complete sale");
+            
+            try {
+                BigDecimal quantity = new BigDecimal(quantityField.getText().trim());
+                
+                if (quantity.compareTo(BigDecimal.ZERO) <= 0) {
+                    alert("Error", "Quantity must be greater than zero");
+                    return;
+                }
+                
+                Transaction trans = exchange.sell(selected, quantity, player); // observer fires refresh
+                
+                if (trans != null && trans.isCommitted()) {
+                    showConfirmation("Sale successful", trans);
+                } 
+                
+                else {
+                    alert("Failed", "Could not complete sale. Check quantity.");
+                }
+            } 
+            
+            catch (NumberFormatException ex) {
+                alert("Error", "Enter a valid number for quantity");
             }
         });
 
-        box.getChildren().addAll(heading, holdingsList, sellBtn);
+        box.getChildren().addAll(heading, holdingsList, quantityRow, sellBtn);
+
         return box;
     }
 
