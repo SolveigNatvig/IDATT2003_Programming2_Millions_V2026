@@ -474,8 +474,10 @@ public class MainGameScene implements ExchangeObserver {
     }
 
     private void updateStatus() {
+        PlayerStatus playerStatus = player.getStatus();
         statusLabel.setText(
             "Player: " + player.getName() +
+            " | Status: " + playerStatus.getDisplayName() +
             " | Week: " + exchange.getWeek() +
             " | Cash: $" + formatMoney(player.getMoney()) +
             " | Net Worth: $" + formatMoney(getNetWorth())
