@@ -8,10 +8,19 @@ public class Purchase extends Transaction {
 
     @Override
     public void commit(Player player) {
+        if (player == null) {
+            throw new IllegalArgumentException("Player cannot be null");
+        }
+        if (isCommitted()) {
+            throw new IllegalStateException("Purchase has already been committed");
+        }
+
         BigDecimal price = this.getCalculator().calculateTotal();
 
-        if (isCommitted() || (player.getMoney().compareTo(price) < 0)) {
-            return;
+        if (player.getMoney().compareTo(price) < 0) {
+            throw new IllegalStateException(
+                "Insufficient funds: required " + price + ", available " + player.getMoney()
+            );
         }
 
         player.withdrawMoney(price);
