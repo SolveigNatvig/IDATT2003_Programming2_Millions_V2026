@@ -110,7 +110,7 @@ public class Exchange {
         if (sellQuantity.compareTo(originalShare.getQuantity()) > 0) {
             return null;
         }
-        
+
         Share shareToSell;
 
         if (sellQuantity.compareTo(originalShare.getQuantity()) < 0) {
@@ -141,7 +141,8 @@ public class Exchange {
             shareToSell = originalShare;
         }
 
-        Sale sale = new Sale(shareToSell, this.week);
+        // Salgstransaksjon via fabrikken
+        Transaction sale = TransactionFactory.createSale(shareToSell, this.week);
 
         sale.commit(player);
         notifyObservers();
