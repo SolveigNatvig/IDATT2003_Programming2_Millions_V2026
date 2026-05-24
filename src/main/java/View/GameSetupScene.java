@@ -1,12 +1,13 @@
 package View;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
 import Controller.StockFileHandler;
 import Model.Exchange;
 import Model.Stock;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class GameSetupScene {
+
     private Scene scene;
     private Consumer<StartGameData> onGameStart;
     private File selectedFile;
@@ -28,114 +30,174 @@ public class GameSetupScene {
     }
 
     private Scene createScene() {
-        VBox root = new VBox(15);
-        root.setPadding(new Insets(20));
-        root.setStyle("-fx-font-family: Arial; -fx-font-size: 12;");
 
-        // title
+        // Card (centered cream box)
+        VBox card = new VBox(20);
+        card.getStyleClass().add("card");
+        card.setMaxWidth(560);
+        card.setMinWidth(400);
+
+        // Title
         Label titleLabel = new Label("Stock Trading Game");
-        titleLabel.setStyle("-fx-font-size: 24; -fx-font-weight: bold;");
-        root.getChildren().add(titleLabel);
+        titleLabel.getStyleClass().add("title-label");
 
-        // player name
-        HBox nameBox = new HBox(10);
-        Label nameLabel = new Label("Player Name:");
-        nameLabel.setMinWidth(120);
+        // Spacer below title
+        Region titleSpacer = new Region();
+        titleSpacer.setMinHeight(6);
+
+        // Player name row
+        HBox nameBox = new HBox(16);
+        nameBox.setAlignment(Pos.CENTER_LEFT);
+        nameBox.setMaxWidth(Double.MAX_VALUE);
+
+        Label nameLabel = new Label("Player:");
+        nameLabel.setMinWidth(130);
+        nameLabel.getStyleClass().add("form-label");
+
         TextField nameField = new TextField();
         nameField.setPromptText("Enter your name");
+        HBox.setHgrow(nameField, Priority.ALWAYS);
+
         nameBox.getChildren().addAll(nameLabel, nameField);
 
-        // starting capital
-        HBox capitalBox = new HBox(10);
-        Label capitalLabel = new Label("Starting Capital:");
-        capitalLabel.setMinWidth(120);
+        // Starting capital row
+        HBox capitalBox = new HBox(16);
+        capitalBox.setAlignment(Pos.CENTER_LEFT);
+        capitalBox.setMaxWidth(Double.MAX_VALUE);
+
+        Label capitalLabel = new Label("Start Capital:");
+        capitalLabel.setMinWidth(130);
+        capitalLabel.getStyleClass().add("form-label");
+
         TextField capitalField = new TextField();
-        capitalField.setPromptText("Enter amount (e.g., 10000)");
+        capitalField.setPromptText("e.g. 10000");
+        HBox.setHgrow(capitalField, Priority.ALWAYS);
+
         capitalBox.getChildren().addAll(capitalLabel, capitalField);
 
-        // file selection
-        HBox fileBox = new HBox(10);
+        // File selection row
+        HBox fileBox = new HBox(16);
+        fileBox.setAlignment(Pos.CENTER_LEFT);
+        fileBox.setMaxWidth(Double.MAX_VALUE);
+
         Label fileSelectLabel = new Label("Stock Data File:");
-        fileSelectLabel.setMinWidth(120);
+        fileSelectLabel.setMinWidth(130);
+        fileSelectLabel.getStyleClass().add("form-label");
+
         fileLabel = new Label("No file selected");
-        fileLabel.setStyle("-fx-text-fill: #666666;");
+        fileLabel.getStyleClass().add("file-label");
+        HBox.setHgrow(fileLabel, Priority.ALWAYS);
+
         Button browseButton = new Button("Browse");
+        browseButton.getStyleClass().add("browse-button");
         browseButton.setOnAction(e -> selectFile());
+
         fileBox.getChildren().addAll(fileSelectLabel, fileLabel, browseButton);
 
-        // button box
-        HBox buttonBox = new HBox(10);
-        buttonBox.setPadding(new Insets(20, 0, 0, 0));
-        
+        // Spacer before buttons
+        Region buttonSpacer = new Region();
+        buttonSpacer.setMinHeight(10);
+
+        // Button row — buttons fill full card width equally
+        HBox buttonBox = new HBox(12);
+        buttonBox.setAlignment(Pos.CENTER_LEFT);
+        buttonBox.setMaxWidth(Double.MAX_VALUE);
+
         Button startButton = new Button("Start Game");
-        startButton.setStyle("-fx-font-size: 14; -fx-padding: 10 40 10 40;");
-        startButton.setOnAction(e -> {
-            String name = nameField.getText().trim();
-            String capitalStr = capitalField.getText().trim();
-            
-            if (name.isEmpty()) {
-                showAlert("Validation Error", "Please enter a player name");
-                return;
-            }
-            
-            if (capitalStr.isEmpty()) {
-                showAlert("Validation Error", "Please enter starting capital");
-                return;
-            }
-            
-            if (selectedFile == null) {
-                showAlert("Validation Error", "Please select a stock data file");
-                return;
-            }
-            
-            try {
-                BigDecimal capital = new BigDecimal(capitalStr);
-                if (capital.compareTo(BigDecimal.ZERO) <= 0) {
-                    showAlert("Validation Error", "Starting capital must be greater than 0");
-                    return;
-                }
-                
-                StockFileHandler fileHandler = new StockFileHandler();
-                List<Stock> stocks = fileHandler.loadStocksFromFile(selectedFile.getAbsolutePath());
-                
-                if (stocks.isEmpty()) {
-                    showAlert("Error", "No stocks found in the selected file");
-                    return;
-                }
-                
-                Exchange exchange = new Exchange("Main Exchange", stocks);
-                onGameStart.accept(new StartGameData(name, capital, exchange));
-            } catch (NumberFormatException ex) {
-                showAlert("Validation Error", "Starting capital must be a valid number");
-            } catch (Exception ex) {
-                showAlert("Error", "Failed to load file: " + ex.getMessage());
-            }
-        });
-        
+        startButton.getStyleClass().add("start-button");
+        startButton.setMaxWidth(Double.MAX_VALUE);
+        startButton.setOnAction(e -> handleStart(nameField, capitalField));
+        HBox.setHgrow(startButton, Priority.ALWAYS);
+
         Button exitButton = new Button("Exit");
+        exitButton.getStyleClass().add("exit-button");
+        exitButton.setMaxWidth(Double.MAX_VALUE);
         exitButton.setOnAction(e -> System.exit(0));
+        HBox.setHgrow(exitButton, Priority.ALWAYS);
+
         buttonBox.getChildren().addAll(startButton, exitButton);
 
-        root.getChildren().addAll(nameBox, capitalBox, fileBox, buttonBox);
+        card.getChildren().addAll(
+                titleLabel,
+                titleSpacer,
+                nameBox,
+                capitalBox,
+                fileBox,
+                buttonSpacer,
+                buttonBox
+        );
 
-        ScrollPane scrollPane = new ScrollPane(root);
-        scrollPane.setFitToWidth(true);
-        return new Scene(scrollPane, 600, 400);
+        // Center the card without stretching it vertically
+        VBox root = new VBox(card);
+        root.setAlignment(Pos.CENTER);
+        root.setFillWidth(false);
+
+        Scene scene = new Scene(root, 800, 550);
+        scene.getStylesheets().add(
+                getClass().getResource("/Style/Global.css").toExternalForm()
+        );
+
+        return scene;
+    }
+
+    private void handleStart(TextField nameField, TextField capitalField) {
+        String name = nameField.getText().trim();
+        String capitalStr = capitalField.getText().trim();
+
+        if (name.isEmpty()) {
+            showAlert("Validation Error", "Please enter a player name");
+            return;
+        }
+
+        if (capitalStr.isEmpty()) {
+            showAlert("Validation Error", "Please enter starting capital");
+            return;
+        }
+
+        if (selectedFile == null) {
+            showAlert("Validation Error", "Please select a stock data file");
+            return;
+        }
+
+        try {
+            BigDecimal capital = new BigDecimal(capitalStr);
+
+            if (capital.compareTo(BigDecimal.ZERO) <= 0) {
+                showAlert("Validation Error", "Starting capital must be greater than 0");
+                return;
+            }
+
+            StockFileHandler fileHandler = new StockFileHandler();
+            List<Stock> stocks = fileHandler.loadStocksFromFile(selectedFile.getAbsolutePath());
+
+            if (stocks.isEmpty()) {
+                showAlert("Error", "No stocks found in the selected file");
+                return;
+            }
+
+            Exchange exchange = new Exchange("Main Exchange", stocks);
+            onGameStart.accept(new StartGameData(name, capital, exchange));
+
+        } catch (NumberFormatException ex) {
+            showAlert("Validation Error", "Starting capital must be a valid number");
+        } catch (Exception ex) {
+            showAlert("Error", "Failed to load file: " + ex.getMessage());
+        }
     }
 
     private void selectFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select Stock Data File");
         fileChooser.getExtensionFilters().addAll(
-            new FileChooser.ExtensionFilter("CSV Files", "*.csv"),
-            new FileChooser.ExtensionFilter("All Files", "*.*")
+                new FileChooser.ExtensionFilter("CSV Files", "*.csv"),
+                new FileChooser.ExtensionFilter("All Files", "*.*")
         );
-        
+
         File file = fileChooser.showOpenDialog(new Stage());
+
         if (file != null) {
             selectedFile = file;
             fileLabel.setText(file.getName());
-            fileLabel.setStyle("-fx-text-fill: #000000;");
         }
     }
 
