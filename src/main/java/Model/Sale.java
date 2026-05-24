@@ -6,12 +6,21 @@ public class Sale extends Transaction {
         super(share, week, new SaleCalculator(share));
     }
 
+    @Override
     public void commit(Player player) {
-        BigDecimal price = getCalculator().calculateTotal();
-
-        if (isCommitted() || !player.getPortfolio().contains(this.getShare())) {
-            return;
+        if (player == null) {
+            throw new IllegalArgumentException("Player cannot be null");
         }
+        if (isCommitted()) {
+            throw new IllegalStateException("Sale has already been committed");
+        }
+        if (!player.getPortfolio().contains(this.getShare())) {
+            throw new IllegalStateException(
+                "Share not found in player's portfolio: " + this.getShare().getStock().getSymbol()
+            );
+        }
+
+        BigDecimal price = getCalculator().calculateTotal();
 
         player.addMoney(price);
         player.getPortfolio().removeShare(this.getShare());
