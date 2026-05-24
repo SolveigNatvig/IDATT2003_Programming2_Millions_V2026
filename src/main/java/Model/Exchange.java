@@ -13,6 +13,9 @@ public class Exchange {
     private final Map<String, Stock> stockMap;
     private final Random random;
 
+    // Registered observers
+    private final List<ExchangeObserver> observers = new ArrayList<>();
+
     public Exchange(String name, List<Stock> stocks) {
         this.name = name;
         this.week = 1;
@@ -22,9 +25,26 @@ public class Exchange {
         for (Stock stock : stocks) {
             stockMap.put(stock.getSymbol(), stock);
         }
-
     }
-    
+
+    // ---- Observer ----
+
+    public void addObserver(ExchangeObserver observer) {
+        if (observer != null && !observers.contains(observer)) {
+            observers.add(observer);
+        }
+    }
+
+    public void removeObserver(ExchangeObserver observer) {
+        observers.remove(observer);
+    }
+
+    private void notifyObservers() {
+        for (ExchangeObserver observer : observers) {
+            observer.onExchangeUpdated(this);
+        }
+    }
+
     public String getName() {
         return name;
     }
@@ -57,7 +77,7 @@ public class Exchange {
 
     public Transaction buy(String symbol, BigDecimal quantity, Player player) {
         Stock stock = getStock(symbol);
-        
+
          // unngå nullpointerexception
         if (stock == null) {
             return null; 
@@ -71,7 +91,9 @@ public class Exchange {
         
         // committer til player
         purchase.commit(player);
-        
+
+        notifyObservers();
+
         return purchase;
     }
 
@@ -86,7 +108,9 @@ public class Exchange {
         
         // commiter til player
         sale.commit(player);
-        
+
+        notifyObservers();
+
         return sale;
     }
 
@@ -108,6 +132,8 @@ public class Exchange {
                 stock.addNewSalesPrice(newPrice);
             }
         }
+
+        notifyObservers();
     }
 
     public List<Stock> getGainers(int limit) { // viser "vinnerne"
