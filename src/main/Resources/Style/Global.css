@@ -5,22 +5,22 @@
 .root {
 
     /* Colour pallette */
-    dark-colour: rgb(28, 53, 45);
-    light-colour: rgb(249, 246, 243);
-    green-colour: rgb(166, 178, 139);
-    light-green-colour: rgba(166, 178, 139, 0.2);
-    red-colour: rgb(245, 201, 176);
-    dark-red-colour: rgb(53, 28, 32);
+    -dark-colour: rgb(28, 53, 45);
+    -light-colour: rgb(249, 246, 243);
+    -green-colour: rgb(166, 178, 139);
+    -light-green-colour: rgba(166, 178, 139, 0.2);
+    -red-colour: rgb(245, 201, 176);
+    -dark-red-colour: rgb(53, 28, 32);
 
 
     -fx-font-family: Verdana;
     -fx-font-size: 13px;
-    -fx-background-color: green-colour;
+    -fx-background-color: -green-colour;
 }
 
 /* All labels */
 .label {
-    -fx-text-fill: dark-colour;
+    -fx-text-fill: -dark-colour;
     -fx-font-size: 13px;
 }
 
@@ -49,19 +49,19 @@
 
 /* Card (centered white box in setup scene) */
 .card {
-    -fx-background-color: light-colour;
+    -fx-background-color: -light-colour;
     -fx-padding: 50 60 50 60;
 }
 
 /* Content area (main game tab/panel background) */
 .content-area {
-    -fx-background-color: light-colour;
+    -fx-background-color: -light-colour;
     -fx-padding: 10;
 }
 
 /* Top status bar */
 .top-bar {
-    -fx-background-color: light-green-colour;
+    -fx-background-color: -light-green-colour;
     -fx-padding: 8 12 8 12;
 }
 
@@ -69,9 +69,9 @@
 .text-field {
     -fx-background-radius: 4;
     -fx-padding: 7 10 7 10;
-    -fx-background-color: green-colour;
-    -fx-text-fill: dark-colour;
-    -fx-prompt-text-fill: dark-colour;
+    -fx-background-color: -green-colour;
+    -fx-text-fill: -dark-colour;
+    -fx-prompt-text-fill: -dark-colour;
     -fx-border-width: 0;
 }
 
@@ -95,25 +95,25 @@
     -fx-border-style: solid;
     -fx-border-width: 2px;
     -fx-border-radius: 4;
-    -fx-background-color: dark-colour;
-    -fx-text-fill: light-colour;
-    -fx-border-color: dark-colour;
+    -fx-background-color: -dark-colour;
+    -fx-text-fill: -light-colour;
+    -fx-border-color: -dark-colour;
 }
 
 .button:hover {
-    -fx-text-fill: dark-colour;
-    -fx-background-color: green-colour;
+    -fx-text-fill: -dark-colour;
+    -fx-background-color: -green-colour;
 }
 
 /* Exit button */
 .exit-button {
-    -fx-background-color: dark-red-colour;
-    -fx-text-fill: light-colour;
-    -fx-border-color: dark-red-colour;
+    -fx-background-color: -dark-red-colour;
+    -fx-text-fill: -light-colour;
+    -fx-border-color: -dark-red-colour;
 }
 
 .exit-button:hover {
-    -fx-background-color: red-colour;
+    -fx-background-color: -red-colour;
 }
 
 /* Browse button */
@@ -124,113 +124,114 @@
 
 /* Table view */
 .table-view {
-    -fx-background-color: light-colour;
-    -fx-border-color: dark-colour;
+    -fx-background-color: -light-colour;
+    -fx-border-color: -dark-colour;
     -fx-border-width: 1;
 }
 
 .table-view .column-header-background {
-    -fx-background-color: green-colour;
+    -fx-background-color: -green-colour;
 }
 
 .table-view .column-header .label {
-    -fx-text-fill: dark-colour;
+    -fx-text-fill: -dark-colour;
     -fx-font-weight: bold;
 }
 
 .table-view .table-row-cell {
-    -fx-background-color: light-colour;
+    -fx-background-color: -light-colour;
     -fx-border-color: transparent;
 }
 
 .table-view .table-row-cell:odd {
-    -fx-background-color: light-green-colour;
+    -fx-background-color: -light-green-colour;
 }
 
 .table-view .table-row-cell:selected {
-    -fx-background-color: green-colour;
+    -fx-background-color: -green-colour;
 }
 
 .table-view .table-row-cell:selected .text {
-    -fx-fill: dark-colour;
+    -fx-fill: -dark-colour;
     -fx-font-weight: bold;
 }
 
 /* Tab pane */
 .tab-pane {
-    -fx-background-color: light-colour;
+    -fx-background-color: -light-colour;
 }
 
 .tab-pane .tab-header-area {
-    -fx-background-color: green-colour;
+    -fx-background-color: -green-colour;
     -fx-padding: 4 0 0 4;
 }
 
 .tab-pane .tab {
-    -fx-background-color: green-colour;
+    -fx-background-color: -green-colour;
     -fx-background-radius: 4 4 0 0;
     -fx-padding: 5 16 5 16;
 }
 
 .tab-pane .tab:selected {
-    -fx-background-color: light-colour;
+    -fx-background-color: -light-colour;
 }
 
 .tab-pane .tab .tab-label {
-    -fx-text-fill: dark-colour;
+    -fx-text-fill: -dark-colour;
     -fx-font-weight: bold;
     -fx-font-size: 12px;
 }
 
 .tab-pane .tab-content-area {
-    -fx-background-color: light-colour;
+    -fx-background-color: -light-colour;
     -fx-padding: 0;
 }
 
 /* List view */
 .list-view {
-    -fx-background-color: light-colour;
-    -fx-border-color: green-colour;
+    -fx-background-color: -light-colour;
+    -fx-border-color: -dark-colour;
 }
 
 .list-view .list-cell {
-    -fx-background-color: light-colour;
-    -fx-text-fill: dark-colour;
+    -fx-background-color: -light-colour;
+    -fx-text-fill: -dark-colour;
     -fx-padding: 6 8;
 }
 
 .list-view .list-cell:odd {
-    -fx-background-color: green-colour;
+    -fx-background-color: -light-green-colour;
 }
 
 .list-view .list-cell:selected {
-    -fx-background-color: dark-colour;
-    -fx-text-fill: light-colour;
+    -fx-background-color: -green-colour;
+    -fx-text-fill: -dark-colour;
+    -fx-font-weight: bold;
 }
 
 /* ComboBox */
 .combo-box {
-    -fx-background-color: green-colour;
+    -fx-background-color: -green-colour;
     -fx-background-radius: 4;
-    -fx-text-fill: dark-colour;
+    -fx-text-fill: -dark-colour;
 }
 
 .combo-box .list-cell {
-    -fx-text-fill: dark-colour;
-    -fx-background-color: green-colour;
+    -fx-text-fill: -dark-colour;
+    -fx-background-color: -green-colour;
 }
 
 .combo-box-popup .list-view .list-cell {
-    -fx-background-color: light-colour;
-    -fx-text-fill: dark-colour;
+    -fx-background-color: -light-colour;
+    -fx-text-fill: -dark-colour;
 }
 
 .combo-box-popup .list-view .list-cell:selected {
-    -fx-background-color: green-colour;
+    -fx-background-color: -green-colour;
 }
 
 /* Separator */
 .separator .line {
-    -fx-border-color: dark-colour;
+    -fx-border-color: -dark-colour;
     -fx-opacity: 0.4;
 }
