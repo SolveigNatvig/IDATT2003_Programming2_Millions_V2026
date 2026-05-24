@@ -10,6 +10,19 @@ public class Stock {
     private final List<BigDecimal> prices;
 
     public Stock(String symbol, String company, BigDecimal salesPrice) {
+        if (symbol == null || symbol.isBlank()) {
+            throw new IllegalArgumentException("Symbol cannot be null or blank");
+        }
+        if (company == null || company.isBlank()) {
+            throw new IllegalArgumentException("Company name cannot be null or blank");
+        }
+        if (salesPrice == null) {
+            throw new IllegalArgumentException("Initial sales price cannot be null");
+        }
+        if (salesPrice.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Initial sales price cannot be negative");
+        }
+
         this.symbol = symbol;
         this.company = company;
         this.prices = new ArrayList<>();
@@ -29,6 +42,12 @@ public class Stock {
     }
     
     public void addNewSalesPrice(BigDecimal price) {
+        if (price == null) {
+            throw new IllegalArgumentException("Price cannot be null");
+        }
+        if (price.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Price cannot be negative");
+        }
         prices.add(price);
     }
 
