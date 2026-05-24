@@ -6,57 +6,99 @@ import Model.Sale;
 import Model.Share;
 import Model.Stock;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 
 public class SaleTest {
-    Stock stock;
-    Share share;
-    Sale sale;
+
+    private Stock stock;
+    private Share share;
+    private Sale sale;
+    private Player player;
 
     @BeforeEach
-    void setUp(){
-        this.stock = new Stock("symbol", "company", new BigDecimal(100));
-        this.share = new Share(this.stock, new BigDecimal(20), new BigDecimal(80));
-        this.sale = new Sale(this.share, 18);
-    } 
+    void setUp() {
+        stock = new Stock("AAPL", "Apple", new BigDecimal("100"));
+        share = new Share(stock, new BigDecimal("20"), new BigDecimal("80"));
+        sale = new Sale(share, 1);
+        player = new Player("Jane", new BigDecimal("500"));
+        player.getPortfolio().addShare(share);
+    }
+
+    // ---- Positive tests ----
 
     @Test
-    void commit_validSale_updatesPlayerState() {
-        
-        // Arrange
-        Player player = new Player("Jane", new BigDecimal(500));
-        player.getPortfolio().addShare(this.share);
-
-        // Act
-        this.sale.commit(player);
-
-        // Assert
-        assertTrue(player.getTransactionArchive().getTransactions(this.sale.getWeek()).contains(this.sale));
-        assertFalse(player.getPortfolio().contains(this.share));
-        assertTrue(this.sale.isCommitted());
+    void testCommitAddsMoney() {
+        BigDecimal before = player.getMoney();
+        sale.commit(player);
+        assertTrue(player.getMoney().compareTo(before) > 0);
     }
 
     @Test
-    void commit_alreadyCommitted_noAction() {
+    void testCommitRemovesShareFromPortfolio() {
+        sale.commit(player);
+        assertFalse(player.getPortfolio().contains(share));
+    }
 
-        // Arrange
-        Player player = new Player("Jane", new BigDecimal(500));
-        player.getPortfolio().addShare(this.share);
-        this.sale.commit(player); 
-        BigDecimal moneyAfterFirstCommit = player.getMoney();
-        
-        // Act
-        this.sale.commit(player);
+    @Test
+    void testCommitRecordedInArchive() {
+        sale.commit(player);
+        assertTrue(player.getTransactionArchive().getAllTransactions().contains(sale));
+    }
 
-        // Assert
-        assertEquals(moneyAfterFirstCommit, player.getMoney());
-        assertEquals(1, player.getTransactionArchive().getTransactions(this.sale.getWeek()).size());
-        assertTrue(this.sale.isCommitted());
-    } 
+    @Test
+    void testCommitSetsCommittedFlag() {
+        sale.commit(player);
+        assertTrue(sale.isCommitted());
+    }
 
-    
+    @Test
+    void testGetShareReturnsCorrectShare() {
+        assertEquals(share, sale.getShare());
+    }
+
+    @Test
+    void testGetWeekReturnsCorrectWeek() {
+        assertEquals(1, sale.getWeek());
+    }
+
+    // ---- Negative tests ----
+
+    @Test
+    void testCommitNullPlayerThrows() {
+        assertThrows(IllegalArgumentException.class, () ->
+            sale.commit(null)
+        );
+    }
+
+    @Test
+    void testCommitAlreadyCommittedThrows() {
+        sale.commit(player);
+        assertThrows(IllegalStateException.class, () ->
+            sale.commit(player)
+        );
+    }
+
+    @Test
+    void testCommitShareNotInPortfolioThrows() {
+        Player otherPlayer = new Player("Bob", new BigDecimal("500"));
+        assertThrows(IllegalStateException.class, () ->
+            sale.commit(otherPlayer)
+        );
+    }
+
+    @Test
+    void testConstructorWeekZeroThrows() {
+        assertThrows(IllegalArgumentException.class, () ->
+            new Sale(share, 0)
+        );
+    }
+
+    @Test
+    void testConstructorNegativeWeekThrows() {
+        assertThrows(IllegalArgumentException.class, () ->
+            new Sale(share, -3)
+        );
+    }
 }
