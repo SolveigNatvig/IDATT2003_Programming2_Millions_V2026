@@ -62,5 +62,35 @@ public class Player {
         return this.transactionArchive;
     }
 
+    /**
+     * Returns the player's current status based on trading activity and net worth performance.
+     * 
+     * Status levels:
+     * - NOVICE: Starting level, no requirements
+     * - INVESTOR: At least 10 weeks of trading AND net worth increased by at least 20%
+     * - SPECULATOR: At least 20 weeks of trading AND net worth at least doubled
+     * 
+     * @return the player's current PlayerStatus
+     */
+    public PlayerStatus getStatus() {
+        // Calculate total net worth: current cash + portfolio value
+        BigDecimal totalNetWorth = this.money.add(this.portfolio.getNetWorth());
+        
+        // Get number of weeks with trading activity
+        int weeksActive = this.transactionArchive.countDistinctWeeks();
+        
+        // Check for SPECULATOR status: 20+ weeks AND net worth doubled
+        if (weeksActive >= 20 && totalNetWorth.compareTo(this.startingMoney.multiply(new BigDecimal("2"))) >= 0) {
+            return PlayerStatus.SPECULATOR;
+        }
+        
+        // Check for INVESTOR status: 10+ weeks AND net worth increased by 20%
+        if (weeksActive >= 10 && totalNetWorth.compareTo(this.startingMoney.multiply(new BigDecimal("1.2"))) >= 0) {
+            return PlayerStatus.INVESTOR;
+        }
+        
+        // Default: NOVICE
+        return PlayerStatus.NOVICE;
+    }
 
 }
