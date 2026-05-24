@@ -33,13 +33,9 @@ public class Portfolio {
         if (symbol == null || symbol.isBlank()) {
             throw new IllegalArgumentException("Symbol cannot be null or blank");
         }
-        List<Share> result = new ArrayList<>();
-        for (Share share : shares) {
-            if (share.getStock().getSymbol().equals(symbol)) {
-                result.add(share);
-            }
-        }
-        return result;
+        return shares.stream()
+            .filter(share -> share.getStock().getSymbol().equals(symbol))
+            .toList();
     }
 
     public boolean contains(Share share) {
@@ -50,12 +46,9 @@ public class Portfolio {
     }
 
     public BigDecimal getNetWorth() {
-        BigDecimal total = BigDecimal.ZERO;
-        for (Share share : shares) {
-            SaleCalculator calc = new SaleCalculator(share);
-            total = total.add(calc.calculateTotal());
-        }
-        return total;
+        return shares.stream()
+            .map(share -> new SaleCalculator(share).calculateTotal())
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
     
 }
