@@ -12,14 +12,19 @@ import Model.*;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class MainGameScene {
+/**
+ * Main game UI. Implements ExchangeObserver so the view automatically refreshes
+ * whenever the Exchange notifies it of a state change (week advance or trade).
+ */
+public class MainGameScene implements ExchangeObserver {
+
     private Scene scene;
     private Exchange exchange;
     private Player player;
     private Runnable onExit;
     private Label statusLabel;
-    
-    // References to UI components for refreshing
+
+    // References to UI components that need refreshing
     private TableView<PortfolioRow> portfolioTable;
     private ListView<Share> holdingsList;
     private TableView<HistoryRow> historyTable;
@@ -29,7 +34,21 @@ public class MainGameScene {
         this.exchange = exchange;
         this.player = player;
         this.onExit = onExit;
+
+        // Register this view as an observer of the exchange
+        this.exchange.addObserver(this);
+
         this.scene = createScene();
+    }
+
+    /**
+     * Called automatically by Exchange whenever its state changes.
+     * Refreshes all UI elements to reflect the latest data.
+     */
+    @Override
+    public void onExchangeUpdated(Exchange exchange) {
+        updateStatus();
+        refreshAllUI();
     }
 
     private Scene createScene() {
@@ -49,12 +68,13 @@ public class MainGameScene {
 
         Button nextWeekBtn = new Button("Next week");
         nextWeekBtn.getStyleClass().addAll("action-button");
-        nextWeekBtn.setOnAction(e -> advance());
+        nextWeekBtn.setOnAction(e -> exchange.advance()); // observer handles the UI update
 
         Button exitBtn = new Button("Exit");
         exitBtn.getStyleClass().add("exit-button");
         exitBtn.setOnAction(e -> {
             if (confirm("Exit Game?", "Final Net Worth: $" + formatMoney(getNetWorth()))) {
+                exchange.removeObserver(this); // clean up before closing
                 onExit.run();
             }
         });
@@ -156,11 +176,9 @@ public class MainGameScene {
                 alert("Error", "Select a holding to sell.");
                 return;
             }
-            Transaction trans = exchange.sell(selected.s, player);
+            Transaction trans = exchange.sell(selected.s, player); // observer fires refresh
             if (trans != null && trans.isCommitted()) {
                 showConfirmation("Sale successful", trans);
-                updateStatus();
-                refreshAllUI();
             } else {
                 alert("Failed", "Could not complete the sale.");
             }
@@ -226,14 +244,12 @@ public class MainGameScene {
                     return;
                 }
                 BigDecimal qty = new BigDecimal(qtyField.getText());
-                Transaction trans = exchange.buy(s.getSymbol(), qty, player);
+                Transaction trans = exchange.buy(s.getSymbol(), qty, player); // observer fires refresh
                 if (trans != null && trans.isCommitted()) {
                     showConfirmation("Purchase successful", trans);
                     stockField.clear();
                     qtyField.clear();
                     infoLabel.setText("");
-                    updateStatus();
-                    refreshAllUI();
                 } else {
                     alert("Failed", "Insufficient funds or error");
                 }
@@ -247,62 +263,50 @@ public class MainGameScene {
     }
 
     private VBox createSellTab() {
-    VBox box = new VBox(10);
-    box.getStyleClass().add("content-area");
+        VBox box = new VBox(10);
+        box.getStyleClass().add("content-area");
 
-    Label heading = new Label("Your Holdings:");
+        Label heading = new Label("Your Holdings:");
 
-    holdingsList = new ListView<>();
-    holdingsList.setPrefHeight(400);
+        holdingsList = new ListView<>();
+        holdingsList.setPrefHeight(400);
 
-    holdingsList.setCellFactory(lv -> new ListCell<Share>() {
-        @Override
-        protected void updateItem(Share s, boolean empty) {
-            super.updateItem(s, empty);
-
-            if (empty || s == null) {
-                setText(null);
-            } else {
-                setText(
-                    s.getStock().getSymbol() + " - " +
-                    s.getQuantity() + " @ $" +
-                    formatMoney(s.getStock().getSalesPrice())
-                );
+        holdingsList.setCellFactory(lv -> new ListCell<Share>() {
+            @Override
+            protected void updateItem(Share s, boolean empty) {
+                super.updateItem(s, empty);
+                if (empty || s == null) {
+                    setText(null);
+                } else {
+                    setText(
+                        s.getStock().getSymbol() + " - " +
+                        s.getQuantity() + " @ $" +
+                        formatMoney(s.getStock().getSalesPrice())
+                    );
+                }
             }
-        }
-    });
+        });
 
-    updateHoldingsList(holdingsList);
+        updateHoldingsList(holdingsList);
 
-    Button sellBtn = new Button("Sell Selected");
+        Button sellBtn = new Button("Sell Selected");
+        sellBtn.setOnAction(e -> {
+            Share selected = holdingsList.getSelectionModel().getSelectedItem();
+            if (selected == null) {
+                alert("Error", "Select a holding to sell");
+                return;
+            }
+            Transaction trans = exchange.sell(selected, player); // observer fires refresh
+            if (trans != null && trans.isCommitted()) {
+                showConfirmation("Sale successful", trans);
+            } else {
+                alert("Failed", "Could not complete sale");
+            }
+        });
 
-    sellBtn.setOnAction(e -> {
-        Share selected = holdingsList.getSelectionModel().getSelectedItem();
-
-        if (selected == null) {
-            alert("Error", "Select a holding to sell");
-            return;
-        }
-
-        Transaction trans = exchange.sell(selected, player);
-
-        if (trans != null && trans.isCommitted()) {
-            showConfirmation("Sale successful", trans);
-            refreshAllUI();
-        } else {
-            alert("Failed", "Could not complete sale");
-        }
-    });
-
-    box.getChildren().addAll(
-        heading,
-        holdingsList,
-        sellBtn
-    );
-
-    return box;
-}
-
+        box.getChildren().addAll(heading, holdingsList, sellBtn);
+        return box;
+    }
 
     private VBox createHistoryPanel() {
         VBox panel = new VBox(10);
@@ -317,7 +321,8 @@ public class MainGameScene {
 
         weekFilterCombo.setOnAction(e -> updateHistory(
             historyTable,
-            weekFilterCombo.getValue() == null || weekFilterCombo.getValue() == 0 ? null : weekFilterCombo.getValue()
+            weekFilterCombo.getValue() == null || weekFilterCombo.getValue() == 0
+                ? null : weekFilterCombo.getValue()
         ));
 
         HBox filterRow = new HBox(8);
@@ -394,13 +399,8 @@ public class MainGameScene {
     }
 
     private void updateHoldingsList(ListView<Share> list) {
-        ObservableList<Share> items =
-            FXCollections.observableArrayList();
-
-        items.addAll(
-            player.getPortfolio().getShares()
-        );
-
+        ObservableList<Share> items = FXCollections.observableArrayList();
+        items.addAll(player.getPortfolio().getShares());
         list.setItems(items);
     }
 
@@ -457,17 +457,13 @@ public class MainGameScene {
             updateHoldingsList(holdingsList);
         }
         if (historyTable != null) {
-            updateHistory(historyTable, weekFilterCombo != null && weekFilterCombo.getValue() != null ? weekFilterCombo.getValue() : null);
+            updateHistory(historyTable,
+                weekFilterCombo != null && weekFilterCombo.getValue() != null
+                    ? weekFilterCombo.getValue() : null);
             if (weekFilterCombo != null) {
                 updateWeekCombo(weekFilterCombo);
             }
         }
-    }
-
-    private void advance() {
-        exchange.advance();
-        updateStatus();
-        refreshAllUI();
     }
 
     private BigDecimal getNetWorth() {
