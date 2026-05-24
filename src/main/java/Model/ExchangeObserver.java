@@ -7,10 +7,10 @@ package Model;
  */
 public interface ExchangeObserver {
 
-    /**
-     * Called by the Exchange after its state has changed.
-     *
-     * @param exchange the Exchange that triggered the notification
-     */
-    void onExchangeUpdated(Exchange exchange);
+  /**
+   * Called by the Exchange after its state has changed.
+   *
+   * @param exchange the Exchange that triggered the notification
+   */
+  void onExchangeUpdated(Exchange exchange);
 }
