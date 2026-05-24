@@ -95,7 +95,7 @@ public class Exchange {
         }
 
         return result;
-        }
+    }
 
     public Transaction buy(String symbol, BigDecimal quantity, Player player) {
         if (symbol == null || symbol.isBlank()) {
@@ -133,23 +133,16 @@ public class Exchange {
 
     public Transaction sell(Share originalShare, BigDecimal sellQuantity, Player player) {
         if (originalShare == null || sellQuantity == null) {
-            return null;
-        }
-
-        // Kan ikke selge mer enn man eier
-        if (sellQuantity.compareTo(originalShare.getQuantity()) > 0) {
-            return null;
-        }
-
-        if (share == null) {
-            throw new IllegalArgumentException("Share cannot be null");
+            throw new IllegalArgumentException("Share and quantity cannot be null");
         }
         if (player == null) {
             throw new IllegalArgumentException("Player cannot be null");
         }
 
-        Sale sale = new Sale(share, this.week);
-        sale.commit(player);
+        // Kan ikke selge mer enn man eier
+        if (sellQuantity.compareTo(originalShare.getQuantity()) > 0) {
+            throw new IllegalArgumentException("Cannot sell more shares than owned");
+        }
 
 
         Share shareToSell;
@@ -182,7 +175,7 @@ public class Exchange {
             shareToSell = originalShare;
         }
 
-        // Salgstransaksjon via fabrikken
+        // Salgstransaksjon
         Transaction sale = TransactionFactory.createSale(shareToSell, this.week);
 
         sale.commit(player);
