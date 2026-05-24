@@ -1,17 +1,17 @@
-/Users/solveignatvig/Library/CloudStorage/Dropbox/NTNU/Dataingeniør/V2026/IDATT2003 Programmering 2/IDATT2003_Programmering2_mappe_v26/Programmering2_mappe_v26/src/main/java/Controller/StockFileHandler.java
-/Users/solveignatvig/Library/CloudStorage/Dropbox/NTNU/Dataingeniør/V2026/IDATT2003 Programmering 2/IDATT2003_Programmering2_mappe_v26/Programmering2_mappe_v26/src/main/java/Model/Exchange.java
-/Users/solveignatvig/Library/CloudStorage/Dropbox/NTNU/Dataingeniør/V2026/IDATT2003 Programmering 2/IDATT2003_Programmering2_mappe_v26/Programmering2_mappe_v26/src/main/java/Model/Player.java
-/Users/solveignatvig/Library/CloudStorage/Dropbox/NTNU/Dataingeniør/V2026/IDATT2003 Programmering 2/IDATT2003_Programmering2_mappe_v26/Programmering2_mappe_v26/src/main/java/Model/Portfolio.java
-/Users/solveignatvig/Library/CloudStorage/Dropbox/NTNU/Dataingeniør/V2026/IDATT2003 Programmering 2/IDATT2003_Programmering2_mappe_v26/Programmering2_mappe_v26/src/main/java/Model/Purchase.java
-/Users/solveignatvig/Library/CloudStorage/Dropbox/NTNU/Dataingeniør/V2026/IDATT2003 Programmering 2/IDATT2003_Programmering2_mappe_v26/Programmering2_mappe_v26/src/main/java/Model/PurchaseCalculator.java
-/Users/solveignatvig/Library/CloudStorage/Dropbox/NTNU/Dataingeniør/V2026/IDATT2003 Programmering 2/IDATT2003_Programmering2_mappe_v26/Programmering2_mappe_v26/src/main/java/Model/Sale.java
-/Users/solveignatvig/Library/CloudStorage/Dropbox/NTNU/Dataingeniør/V2026/IDATT2003 Programmering 2/IDATT2003_Programmering2_mappe_v26/Programmering2_mappe_v26/src/main/java/Model/SaleCalculator.java
-/Users/solveignatvig/Library/CloudStorage/Dropbox/NTNU/Dataingeniør/V2026/IDATT2003 Programmering 2/IDATT2003_Programmering2_mappe_v26/Programmering2_mappe_v26/src/main/java/Model/Share.java
-/Users/solveignatvig/Library/CloudStorage/Dropbox/NTNU/Dataingeniør/V2026/IDATT2003 Programmering 2/IDATT2003_Programmering2_mappe_v26/Programmering2_mappe_v26/src/main/java/Model/Stock.java
-/Users/solveignatvig/Library/CloudStorage/Dropbox/NTNU/Dataingeniør/V2026/IDATT2003 Programmering 2/IDATT2003_Programmering2_mappe_v26/Programmering2_mappe_v26/src/main/java/Model/Transaction.java
-/Users/solveignatvig/Library/CloudStorage/Dropbox/NTNU/Dataingeniør/V2026/IDATT2003 Programmering 2/IDATT2003_Programmering2_mappe_v26/Programmering2_mappe_v26/src/main/java/Model/TransactionArchive.java
-/Users/solveignatvig/Library/CloudStorage/Dropbox/NTNU/Dataingeniør/V2026/IDATT2003 Programmering 2/IDATT2003_Programmering2_mappe_v26/Programmering2_mappe_v26/src/main/java/Model/TransactionCalculator.java
-/Users/solveignatvig/Library/CloudStorage/Dropbox/NTNU/Dataingeniør/V2026/IDATT2003 Programmering 2/IDATT2003_Programmering2_mappe_v26/Programmering2_mappe_v26/src/main/java/View/GameSetupScene.java
-/Users/solveignatvig/Library/CloudStorage/Dropbox/NTNU/Dataingeniør/V2026/IDATT2003 Programmering 2/IDATT2003_Programmering2_mappe_v26/Programmering2_mappe_v26/src/main/java/View/Launcher.java
-/Users/solveignatvig/Library/CloudStorage/Dropbox/NTNU/Dataingeniør/V2026/IDATT2003 Programmering 2/IDATT2003_Programmering2_mappe_v26/Programmering2_mappe_v26/src/main/java/View/MainGameScene.java
-/Users/solveignatvig/Library/CloudStorage/Dropbox/NTNU/Dataingeniør/V2026/IDATT2003 Programmering 2/IDATT2003_Programmering2_mappe_v26/Programmering2_mappe_v26/src/main/java/View/StockTradingGameApp.java
+C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Controller\StockFileHandler.java
+C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\Exchange.java
+C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\Player.java
+C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\Portfolio.java
+C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\Purchase.java
+C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\PurchaseCalculator.java
+C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\Sale.java
+C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\SaleCalculator.java
+C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\Share.java
+C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\Stock.java
+C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\Transaction.java
+C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\TransactionArchive.java
+C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\TransactionCalculator.java
+C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\View\GameSetupScene.java
+C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\View\Launcher.java
+C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\View\MainGameScene.java
+C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\View\StockTradingGameApp.java
