@@ -98,19 +98,53 @@ public class Exchange {
     }
 
     public Transaction sell(Share share, Player player) {
-        // unngå nullpointerexception
-        if (share == null) {
+        return sell(share, share.getQuantity(), player);
+    }
+
+    public Transaction sell(Share originalShare, BigDecimal sellQuantity, Player player) {
+        if (originalShare == null || sellQuantity == null) {
             return null;
         }
 
-        // oppretter salgstransaksjonen for den uka via fabrikken
-        Transaction sale = TransactionFactory.createSale(share, this.week);
+        // Kan ikke selge mer enn man eier
+        if (sellQuantity.compareTo(originalShare.getQuantity()) > 0) {
+            return null;
+        }
         
-        // commiter til player
+        Share shareToSell;
+
+        if (sellQuantity.compareTo(originalShare.getQuantity()) < 0) {
+
+            /**
+             * Delsalg:
+             * Original mengde - mengde som selges = gjenværende mengde
+             */
+
+            player.getPortfolio().removeShare(originalShare);
+
+            BigDecimal remainderShare = originalShare.getQuantity().subtract(sellQuantity);
+
+            player.getPortfolio().addShare(new Share(originalShare.getStock(), remainderShare, originalShare.getPurchasePrice()));
+
+            /**
+             * Legger delmengden midlertidig til i portfolio slik at Sale.commit() finner den
+             */
+
+            shareToSell = new Share(originalShare.getStock(), sellQuantity, originalShare.getPurchasePrice());
+
+            player.getPortfolio().addShare(shareToSell);
+
+        }
+
+        else {
+            // Fullstendig salg: hele andelen selges som normalt
+            shareToSell = originalShare;
+        }
+
+        Sale sale = new Sale(shareToSell, this.week);
+
         sale.commit(player);
-
         notifyObservers();
-
         return sale;
     }
 
