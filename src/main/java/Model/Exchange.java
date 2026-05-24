@@ -66,8 +66,8 @@ public class Exchange {
         // lager en ny "andel" basert på nåværende salgspris
         Share shareToBuy = new Share(stock, quantity, stock.getSalesPrice());
         
-        // oppretter kjøpstransaksjonen for den uka
-        Purchase purchase = new Purchase(shareToBuy, this.week);
+        // oppretter kjøpstransaksjonen for den uka via fabrikken
+        Transaction purchase = TransactionFactory.createPurchase(shareToBuy, this.week);
         
         // committer til player
         purchase.commit(player);
@@ -81,8 +81,8 @@ public class Exchange {
             return null;
         }
 
-        // oppretter salgstransaksjonen for den uka
-        Sale sale = new Sale(share, this.week);
+        // oppretter salgstransaksjonen for den uka via fabrikken
+        Transaction sale = TransactionFactory.createSale(share, this.week);
         
         // commiter til player
         sale.commit(player);
