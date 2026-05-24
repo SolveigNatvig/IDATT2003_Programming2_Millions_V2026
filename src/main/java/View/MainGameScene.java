@@ -18,6 +18,12 @@ public class MainGameScene {
     private Player player;
     private Runnable onExit;
     private Label statusLabel;
+    
+    // References to UI components for refreshing
+    private TableView<PortfolioRow> portfolioTable;
+    private ListView<Share> holdingsList;
+    private TableView<HistoryRow> historyTable;
+    private ComboBox<Integer> weekFilterCombo;
 
     public MainGameScene(Exchange exchange, Player player, Runnable onExit) {
         this.exchange = exchange;
@@ -134,16 +140,37 @@ public class MainGameScene {
 
         Label heading = new Label("Holdings:");
 
-        TableView<PortfolioRow> table = new TableView<>();
-        addPortfolioColumns(table);
-        updatePortfolio(table);
+        portfolioTable = new TableView<>();
+        addPortfolioColumns(portfolioTable);
+        updatePortfolio(portfolioTable);
 
         Button refresh = new Button("Refresh");
         refresh.getStyleClass().add("action-button");
-        refresh.setOnAction(e -> updatePortfolio(table));
+        refresh.setOnAction(e -> updatePortfolio(portfolioTable));
 
-        VBox.setVgrow(table, Priority.ALWAYS);
-        panel.getChildren().addAll(heading, table, refresh);
+        Button sellSelected = new Button("Sell Selected");
+        sellSelected.getStyleClass().add("action-button");
+        sellSelected.setOnAction(e -> {
+            PortfolioRow selected = portfolioTable.getSelectionModel().getSelectedItem();
+            if (selected == null) {
+                alert("Error", "Select a holding to sell.");
+                return;
+            }
+            Transaction trans = exchange.sell(selected.s, player);
+            if (trans != null && trans.isCommitted()) {
+                showConfirmation("Sale successful", trans);
+                updateStatus();
+                refreshAllUI();
+            } else {
+                alert("Failed", "Could not complete the sale.");
+            }
+        });
+
+        HBox buttons = new HBox(10, refresh, sellSelected);
+        buttons.setAlignment(Pos.CENTER_LEFT);
+
+        VBox.setVgrow(portfolioTable, Priority.ALWAYS);
+        panel.getChildren().addAll(heading, portfolioTable, buttons);
         return panel;
     }
 
@@ -206,6 +233,7 @@ public class MainGameScene {
                     qtyField.clear();
                     infoLabel.setText("");
                     updateStatus();
+                    refreshAllUI();
                 } else {
                     alert("Failed", "Insufficient funds or error");
                 }
@@ -219,68 +247,85 @@ public class MainGameScene {
     }
 
     private VBox createSellTab() {
-        VBox box = new VBox(10);
-        box.getStyleClass().add("content-area");
+    VBox box = new VBox(10);
+    box.getStyleClass().add("content-area");
 
-        Label heading = new Label("Your Holdings:");
+    Label heading = new Label("Your Holdings:");
 
-        ListView<String> holdingsList = new ListView<>();
-        holdingsList.setPrefHeight(200);
-        VBox.setVgrow(holdingsList, Priority.ALWAYS);
-        updateHoldingsList(holdingsList);
+    holdingsList = new ListView<>();
+    holdingsList.setPrefHeight(400);
 
-        Label infoLabel = new Label();
+    holdingsList.setCellFactory(lv -> new ListCell<Share>() {
+        @Override
+        protected void updateItem(Share s, boolean empty) {
+            super.updateItem(s, empty);
 
-        Button sellBtn = new Button("Sell Selected");
-        sellBtn.getStyleClass().add("action-button");
-        sellBtn.setOnAction(e -> {
-            String selected = holdingsList.getSelectionModel().getSelectedItem();
-            if (selected == null) {
-                alert("Error", "Select a holding to sell");
-                return;
+            if (empty || s == null) {
+                setText(null);
+            } else {
+                setText(
+                    s.getStock().getSymbol() + " - " +
+                    s.getQuantity() + " @ $" +
+                    formatMoney(s.getStock().getSalesPrice())
+                );
             }
-            try {
-                String symbol = selected.split(" ")[0];
-                List<Share> shares = player.getPortfolio().getShares(symbol);
-                if (shares.isEmpty()) return;
+        }
+    });
 
-                Transaction trans = exchange.sell(shares.get(0), player);
-                if (trans != null && trans.isCommitted()) {
-                    showConfirmation("Sale successful", trans);
-                    updateHoldingsList(holdingsList);
-                    updateStatus();
-                }
-            } catch (Exception ex) {
-                alert("Error", ex.getMessage());
-            }
-        });
+    updateHoldingsList(holdingsList);
 
-        box.getChildren().addAll(heading, holdingsList, infoLabel, sellBtn);
-        return box;
-    }
+    Button sellBtn = new Button("Sell Selected");
+
+    sellBtn.setOnAction(e -> {
+        Share selected = holdingsList.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+            alert("Error", "Select a holding to sell");
+            return;
+        }
+
+        Transaction trans = exchange.sell(selected, player);
+
+        if (trans != null && trans.isCommitted()) {
+            showConfirmation("Sale successful", trans);
+            refreshAllUI();
+        } else {
+            alert("Failed", "Could not complete sale");
+        }
+    });
+
+    box.getChildren().addAll(
+        heading,
+        holdingsList,
+        sellBtn
+    );
+
+    return box;
+}
+
 
     private VBox createHistoryPanel() {
         VBox panel = new VBox(10);
         panel.getStyleClass().add("content-area");
 
-        ComboBox<Integer> weekFilter = new ComboBox<>();
-        updateWeekCombo(weekFilter);
+        weekFilterCombo = new ComboBox<>();
+        updateWeekCombo(weekFilterCombo);
 
-        TableView<HistoryRow> table = new TableView<>();
-        addHistoryColumns(table);
-        updateHistory(table, null);
+        historyTable = new TableView<>();
+        addHistoryColumns(historyTable);
+        updateHistory(historyTable, null);
 
-        weekFilter.setOnAction(e -> updateHistory(
-            table,
-            weekFilter.getValue() == null || weekFilter.getValue() == 0 ? null : weekFilter.getValue()
+        weekFilterCombo.setOnAction(e -> updateHistory(
+            historyTable,
+            weekFilterCombo.getValue() == null || weekFilterCombo.getValue() == 0 ? null : weekFilterCombo.getValue()
         ));
 
         HBox filterRow = new HBox(8);
         filterRow.setAlignment(Pos.CENTER_LEFT);
-        filterRow.getChildren().addAll(new Label("Week:"), weekFilter);
+        filterRow.getChildren().addAll(new Label("Week:"), weekFilterCombo);
 
-        VBox.setVgrow(table, Priority.ALWAYS);
-        panel.getChildren().addAll(filterRow, table);
+        VBox.setVgrow(historyTable, Priority.ALWAYS);
+        panel.getChildren().addAll(filterRow, historyTable);
         return panel;
     }
 
@@ -348,13 +393,14 @@ public class MainGameScene {
         table.setItems(data);
     }
 
-    private void updateHoldingsList(ListView<String> list) {
-        ObservableList<String> items = FXCollections.observableArrayList();
-        for (Share s : player.getPortfolio().getShares()) {
-            items.add(s.getStock().getSymbol() + " - " +
-                formatMoney(s.getQuantity()) + " @ $" +
-                formatMoney(s.getStock().getSalesPrice()));
-        }
+    private void updateHoldingsList(ListView<Share> list) {
+        ObservableList<Share> items =
+            FXCollections.observableArrayList();
+
+        items.addAll(
+            player.getPortfolio().getShares()
+        );
+
         list.setItems(items);
     }
 
@@ -403,9 +449,25 @@ public class MainGameScene {
         );
     }
 
+    private void refreshAllUI() {
+        if (portfolioTable != null) {
+            updatePortfolio(portfolioTable);
+        }
+        if (holdingsList != null) {
+            updateHoldingsList(holdingsList);
+        }
+        if (historyTable != null) {
+            updateHistory(historyTable, weekFilterCombo != null && weekFilterCombo.getValue() != null ? weekFilterCombo.getValue() : null);
+            if (weekFilterCombo != null) {
+                updateWeekCombo(weekFilterCombo);
+            }
+        }
+    }
+
     private void advance() {
         exchange.advance();
         updateStatus();
+        refreshAllUI();
     }
 
     private BigDecimal getNetWorth() {
