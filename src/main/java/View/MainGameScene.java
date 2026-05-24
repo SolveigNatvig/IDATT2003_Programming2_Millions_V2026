@@ -149,8 +149,22 @@ public class MainGameScene implements ExchangeObserver {
         searchBox.getChildren().addAll(search, searchBtn, filter);
         loadStocks.run();
 
+        // Double-click a row to view price statistics
+        table.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                StockRow selected = table.getSelectionModel().getSelectedItem();
+                if (selected != null) {
+                    showStockStats(selected.s);
+                }
+            }
+        });
+
         VBox.setVgrow(table, Priority.ALWAYS);
-        panel.getChildren().addAll(searchBox, table);
+
+        Label hint = new Label("Double-click a row to view price history");
+        hint.getStyleClass().add("file-label");
+
+        panel.getChildren().addAll(searchBox, table, hint);
         return panel;
     }
 
@@ -289,7 +303,7 @@ public class MainGameScene implements ExchangeObserver {
 
         updateHoldingsList(holdingsList);
 
-        // Antall Rad
+        // Quantity row
         HBox quantityRow = new HBox(8);
         quantityRow.setAlignment(Pos.CENTER_LEFT);
         TextField quantityField = new TextField();
@@ -297,7 +311,7 @@ public class MainGameScene implements ExchangeObserver {
         quantityField.setPrefWidth(120);
         quantityRow.getChildren().addAll(new Label("Quantity to sell:"), quantityField);
 
-        // Fyll inn maks anntall automatisk når man velger en holding
+        // Automatically fills in the maximum quantity when a holding is selected
         holdingsList.getSelectionModel().selectedItemProperty().addListener((obs, old, selected) -> {
             if (selected != null) {
                 quantityField.setText(selected.getQuantity().toPlainString());
@@ -501,6 +515,63 @@ public class MainGameScene implements ExchangeObserver {
 
     private BigDecimal getNetWorth() {
         return player.getMoney().add(player.getPortfolio().getNetWorth());
+    }
+
+    private void showStockStats(Stock stock) {
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle(stock.getSymbol() + " — " + stock.getCompany());
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+
+        VBox content = new VBox(12);
+        content.setPrefWidth(340);
+
+        // --- Number Sumary ---
+        BigDecimal change = stock.getLatestPriceChange();
+        String changeSign = change.compareTo(BigDecimal.ZERO) >= 0 ? "+" : "";
+
+        GridPane summary = new GridPane();
+        summary.setHgap(16);
+        summary.setVgap(6);
+        addStatRow(summary, 0, "Current price:",  "$" + formatMoney(stock.getSalesPrice()));
+        addStatRow(summary, 1, "Week change:",    changeSign + formatMoney(change));
+        addStatRow(summary, 2, "All-time high:",  "$" + formatMoney(stock.getHighestPrice()));
+        addStatRow(summary, 3, "All-time low:",   "$" + formatMoney(stock.getLowestPrice()));
+        addStatRow(summary, 4, "Weeks tracked:",  String.valueOf(stock.getHistoricalPrices().size()));
+
+        // --- Price history list ---
+        Label histHeading = new Label("Price history:");
+        histHeading.setStyle("-fx-font-weight: bold;");
+
+        ListView<String> histList = new ListView<>();
+        histList.setPrefHeight(180);
+        List<BigDecimal> prices = stock.getHistoricalPrices();
+        ObservableList<String> rows = FXCollections.observableArrayList();
+        for (int i = 0; i < prices.size(); i++) {
+            String change_i = "";
+            if (i > 0) {
+                BigDecimal diff = prices.get(i).subtract(prices.get(i - 1));
+                change_i = "  (" + (diff.compareTo(BigDecimal.ZERO) >= 0 ? "+" : "") +
+                           formatMoney(diff) + ")";
+            }
+            rows.add("Week " + (i + 1) + ":  $" + formatMoney(prices.get(i)) + change_i);
+        }
+        histList.setItems(rows);
+
+        // Scroll to the most recent week
+        if (!rows.isEmpty()) histList.scrollTo(rows.size() - 1);
+
+        content.getChildren().addAll(summary, new Separator(), histHeading, histList);
+        dialog.getDialogPane().setContent(content);
+        dialog.showAndWait();
+    }
+
+    /** Adds a label and value to the given row. */
+    private void addStatRow(GridPane grid, int row, String labelText, String valueText) {
+        Label lbl = new Label(labelText);
+        lbl.setStyle("-fx-font-weight: bold;");
+        Label val = new Label(valueText);
+        grid.add(lbl, 0, row);
+        grid.add(val, 1, row);
     }
 
     private void showConfirmation(String title, Transaction t) {
