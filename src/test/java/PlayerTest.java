@@ -1,10 +1,10 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import Model.Player;
+import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import Model.Player;
 
-import java.math.BigDecimal;
 
 /**
  * Unit tests for the Player class.
@@ -16,7 +16,7 @@ public class PlayerTest {
 
   @BeforeEach
   void setUp() {
-      player = new Player("Jane", new BigDecimal("1000"));
+    player = new Player("Jane", new BigDecimal("1000"));
   }
 
   // ---- Positive tests ----
@@ -26,7 +26,7 @@ public class PlayerTest {
    */
   @Test
   void testGetName() {
-      assertEquals("Jane", player.getName());
+    assertEquals("Jane", player.getName());
   }
 
   /**
@@ -34,7 +34,7 @@ public class PlayerTest {
    */
   @Test
   void testGetMoneyMatchesStartingCapital() {
-      assertEquals(new BigDecimal("1000"), player.getMoney());
+    assertEquals(new BigDecimal("1000"), player.getMoney());
   }
 
   /**
@@ -42,8 +42,8 @@ public class PlayerTest {
    */
   @Test
   void testAddMoney() {
-      player.addMoney(new BigDecimal("500"));
-      assertEquals(new BigDecimal("1500"), player.getMoney());
+    player.addMoney(new BigDecimal("500"));
+    assertEquals(new BigDecimal("1500"), player.getMoney());
   }
 
   /**
@@ -51,8 +51,8 @@ public class PlayerTest {
    */
   @Test
   void testAddMoneyZero() {
-      player.addMoney(BigDecimal.ZERO);
-      assertEquals(new BigDecimal("1000"), player.getMoney());
+    player.addMoney(BigDecimal.ZERO);
+    assertEquals(new BigDecimal("1000"), player.getMoney());
   }
 
   /**
@@ -60,8 +60,8 @@ public class PlayerTest {
    */
   @Test
   void testWithdrawMoney() {
-      player.withdrawMoney(new BigDecimal("400"));
-      assertEquals(new BigDecimal("600"), player.getMoney());
+    player.withdrawMoney(new BigDecimal("400"));
+    assertEquals(new BigDecimal("600"), player.getMoney());
   }
 
   /**
@@ -69,8 +69,8 @@ public class PlayerTest {
    */
   @Test
   void testWithdrawMoneyZero() {
-      player.withdrawMoney(BigDecimal.ZERO);
-      assertEquals(new BigDecimal("1000"), player.getMoney());
+    player.withdrawMoney(BigDecimal.ZERO);
+    assertEquals(new BigDecimal("1000"), player.getMoney());
   }
 
   /**
@@ -78,7 +78,7 @@ public class PlayerTest {
    */
   @Test
   void testPortfolioInitiallyEmpty() {
-      assertTrue(player.getPortfolio().getShares().isEmpty());
+    assertTrue(player.getPortfolio().getShares().isEmpty());
   }
 
   /**
@@ -86,7 +86,7 @@ public class PlayerTest {
    */
   @Test
   void testTransactionArchiveInitiallyEmpty() {
-      assertTrue(player.getTransactionArchive().isEmpty());
+    assertTrue(player.getTransactionArchive().isEmpty());
   }
 
   /**
@@ -94,8 +94,8 @@ public class PlayerTest {
    */
   @Test
   void testStartingMoneyZeroAllowed() {
-      Player broke = new Player("Broke", BigDecimal.ZERO);
-      assertEquals(BigDecimal.ZERO, broke.getMoney());
+    Player broke = new Player("Broke", BigDecimal.ZERO);
+    assertEquals(BigDecimal.ZERO, broke.getMoney());
   }
 
   // ---- Negative tests ----
@@ -105,9 +105,9 @@ public class PlayerTest {
    */
   @Test
   void testNullNameThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          new Player(null, new BigDecimal("1000"))
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        new Player(null, new BigDecimal("1000"))
+    );
   }
 
   /**
@@ -115,9 +115,9 @@ public class PlayerTest {
    */
   @Test
   void testBlankNameThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          new Player("  ", new BigDecimal("1000"))
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        new Player("  ", new BigDecimal("1000"))
+    );
   }
 
   /**
@@ -125,9 +125,9 @@ public class PlayerTest {
    */
   @Test
   void testNullStartingMoneyThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          new Player("Jane", null)
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        new Player("Jane", null)
+    );
   }
 
   /**
@@ -135,9 +135,9 @@ public class PlayerTest {
    */
   @Test
   void testNegativeStartingMoneyThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          new Player("Jane", new BigDecimal("-1"))
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        new Player("Jane", new BigDecimal("-1"))
+    );
   }
 
   /**
@@ -145,9 +145,9 @@ public class PlayerTest {
    */
   @Test
   void testAddNullAmountThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          player.addMoney(null)
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        player.addMoney(null)
+    );
   }
 
   /**
@@ -155,9 +155,9 @@ public class PlayerTest {
    */
   @Test
   void testAddNegativeAmountThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          player.addMoney(new BigDecimal("-100"))
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        player.addMoney(new BigDecimal("-100"))
+    );
   }
 
   /**
@@ -165,9 +165,9 @@ public class PlayerTest {
    */
   @Test
   void testWithdrawNullAmountThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          player.withdrawMoney(null)
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        player.withdrawMoney(null)
+    );
   }
 
   /**
@@ -175,9 +175,9 @@ public class PlayerTest {
    */
   @Test
   void testWithdrawNegativeAmountThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          player.withdrawMoney(new BigDecimal("-100"))
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        player.withdrawMoney(new BigDecimal("-100"))
+    );
   }
 }
 

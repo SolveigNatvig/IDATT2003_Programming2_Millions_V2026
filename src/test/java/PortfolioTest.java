@@ -1,4 +1,5 @@
 import static org.junit.jupiter.api.Assertions.*;
+
 import Model.Portfolio;
 import Model.Share;
 import Model.Stock;
@@ -20,9 +21,9 @@ public class PortfolioTest {
 
   @BeforeEach
   void setUp() {
-      portfolio = new Portfolio();
-      stock = new Stock("AAPL", "Apple", new BigDecimal("150"));
-      share = new Share(stock, new BigDecimal("10"), new BigDecimal("140"));
+    portfolio = new Portfolio();
+    stock = new Stock("AAPL", "Apple", new BigDecimal("150"));
+    share = new Share(stock, new BigDecimal("10"), new BigDecimal("140"));
   }
 
   // ---- Positive tests ----
@@ -32,9 +33,9 @@ public class PortfolioTest {
    */
   @Test
   void testAddShare() {
-      boolean result = portfolio.addShare(share);
-      assertTrue(result);
-      assertTrue(portfolio.contains(share));
+    boolean result = portfolio.addShare(share);
+    assertTrue(result);
+    assertTrue(portfolio.contains(share));
   }
 
   /**
@@ -42,13 +43,13 @@ public class PortfolioTest {
    */
   @Test
   void testAddMultipleShares() {
-      Stock stock2 = new Stock("GOOGL", "Google", new BigDecimal("200"));
-      Share share2 = new Share(stock2, new BigDecimal("5"), new BigDecimal("190"));
+    Stock stock2 = new Stock("GOOGL", "Google", new BigDecimal("200"));
+    Share share2 = new Share(stock2, new BigDecimal("5"), new BigDecimal("190"));
 
-      portfolio.addShare(share);
-      portfolio.addShare(share2);
+    portfolio.addShare(share);
+    portfolio.addShare(share2);
 
-      assertEquals(2, portfolio.getShares().size());
+    assertEquals(2, portfolio.getShares().size());
   }
 
   /**
@@ -56,10 +57,10 @@ public class PortfolioTest {
    */
   @Test
   void testRemoveShare() {
-      portfolio.addShare(share);
-      boolean result = portfolio.removeShare(share);
-      assertTrue(result);
-      assertFalse(portfolio.contains(share));
+    portfolio.addShare(share);
+    boolean result = portfolio.removeShare(share);
+    assertTrue(result);
+    assertFalse(portfolio.contains(share));
   }
 
   /**
@@ -67,8 +68,8 @@ public class PortfolioTest {
    */
   @Test
   void testRemoveShareNotInPortfolioReturnsFalse() {
-      boolean result = portfolio.removeShare(share);
-      assertFalse(result);
+    boolean result = portfolio.removeShare(share);
+    assertFalse(result);
   }
 
   /**
@@ -76,10 +77,10 @@ public class PortfolioTest {
    */
   @Test
   void testGetSharesReturnsAll() {
-      portfolio.addShare(share);
-      List<Share> shares = portfolio.getShares();
-      assertEquals(1, shares.size());
-      assertTrue(shares.contains(share));
+    portfolio.addShare(share);
+    List<Share> shares = portfolio.getShares();
+    assertEquals(1, shares.size());
+    assertTrue(shares.contains(share));
   }
 
   /**
@@ -88,10 +89,10 @@ public class PortfolioTest {
    */
   @Test
   void testGetSharesIsDefensiveCopy() {
-      portfolio.addShare(share);
-      List<Share> copy = portfolio.getShares();
-      copy.clear();
-      assertEquals(1, portfolio.getShares().size());
+    portfolio.addShare(share);
+    List<Share> copy = portfolio.getShares();
+    copy.clear();
+    assertEquals(1, portfolio.getShares().size());
   }
 
   /**
@@ -99,15 +100,15 @@ public class PortfolioTest {
    */
   @Test
   void testGetSharesBySymbol() {
-      Stock stock2 = new Stock("GOOGL", "Google", new BigDecimal("200"));
-      Share share2 = new Share(stock2, new BigDecimal("5"), new BigDecimal("190"));
+    Stock stock2 = new Stock("GOOGL", "Google", new BigDecimal("200"));
+    Share share2 = new Share(stock2, new BigDecimal("5"), new BigDecimal("190"));
 
-      portfolio.addShare(share);
-      portfolio.addShare(share2);
+    portfolio.addShare(share);
+    portfolio.addShare(share2);
 
-      List<Share> result = portfolio.getShares("AAPL");
-      assertEquals(1, result.size());
-      assertTrue(result.contains(share));
+    List<Share> result = portfolio.getShares("AAPL");
+    assertEquals(1, result.size());
+    assertTrue(result.contains(share));
   }
 
   /**
@@ -115,9 +116,9 @@ public class PortfolioTest {
    */
   @Test
   void testGetSharesBySymbolNoMatch() {
-      portfolio.addShare(share);
-      List<Share> result = portfolio.getShares("MSFT");
-      assertTrue(result.isEmpty());
+    portfolio.addShare(share);
+    List<Share> result = portfolio.getShares("MSFT");
+    assertTrue(result.isEmpty());
   }
 
   /**
@@ -125,8 +126,8 @@ public class PortfolioTest {
    */
   @Test
   void testContainsReturnsTrueWhenPresent() {
-      portfolio.addShare(share);
-      assertTrue(portfolio.contains(share));
+    portfolio.addShare(share);
+    assertTrue(portfolio.contains(share));
   }
 
   /**
@@ -134,7 +135,7 @@ public class PortfolioTest {
    */
   @Test
   void testContainsReturnsFalseWhenAbsent() {
-      assertFalse(portfolio.contains(share));
+    assertFalse(portfolio.contains(share));
   }
 
   /**
@@ -142,7 +143,7 @@ public class PortfolioTest {
    */
   @Test
   void testGetNetWorthEmptyPortfolio() {
-      assertEquals(BigDecimal.ZERO, portfolio.getNetWorth());
+    assertEquals(BigDecimal.ZERO, portfolio.getNetWorth());
   }
 
   /**
@@ -150,9 +151,9 @@ public class PortfolioTest {
    */
   @Test
   void testGetNetWorthWithShares() {
-      portfolio.addShare(share);
-      // net worth should be positive when portfolio has holdings
-      assertTrue(portfolio.getNetWorth().compareTo(BigDecimal.ZERO) > 0);
+    portfolio.addShare(share);
+    // net worth should be positive when portfolio has holdings
+    assertTrue(portfolio.getNetWorth().compareTo(BigDecimal.ZERO) > 0);
   }
 
   // ---- Negative tests ----
@@ -162,9 +163,9 @@ public class PortfolioTest {
    */
   @Test
   void testAddNullShareThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          portfolio.addShare(null)
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        portfolio.addShare(null)
+    );
   }
 
   /**
@@ -172,9 +173,9 @@ public class PortfolioTest {
    */
   @Test
   void testRemoveNullShareThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          portfolio.removeShare(null)
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        portfolio.removeShare(null)
+    );
   }
 
   /**
@@ -182,9 +183,9 @@ public class PortfolioTest {
    */
   @Test
   void testContainsNullShareThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          portfolio.contains(null)
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        portfolio.contains(null)
+    );
   }
 
   /**
@@ -192,9 +193,9 @@ public class PortfolioTest {
    */
   @Test
   void testGetSharesByNullSymbolThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          portfolio.getShares((String) null)
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        portfolio.getShares((String) null)
+    );
   }
 
   /**
@@ -202,8 +203,8 @@ public class PortfolioTest {
    */
   @Test
   void testGetSharesByBlankSymbolThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          portfolio.getShares("  ")
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        portfolio.getShares("  ")
+    );
   }
 }

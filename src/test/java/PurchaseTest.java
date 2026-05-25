@@ -1,13 +1,12 @@
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.math.BigDecimal;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import Model.Player;
 import Model.Purchase;
 import Model.Share;
 import Model.Stock;
+import java.math.BigDecimal;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for the Purchase class.
@@ -22,10 +21,10 @@ public class PurchaseTest {
 
   @BeforeEach
   void setUp() {
-      stock = new Stock("AAPL", "Apple", new BigDecimal("100"));
-      share = new Share(stock, new BigDecimal("20"), new BigDecimal("50"));
-      purchase = new Purchase(share, 1);
-      player = new Player("Jane", new BigDecimal("500000"));
+    stock = new Stock("AAPL", "Apple", new BigDecimal("100"));
+    share = new Share(stock, new BigDecimal("20"), new BigDecimal("50"));
+    purchase = new Purchase(share, 1);
+    player = new Player("Jane", new BigDecimal("500000"));
   }
 
   // ---- Positive tests ----
@@ -35,9 +34,9 @@ public class PurchaseTest {
    */
   @Test
   void testCommitDeductsMoneyFromPlayer() {
-      BigDecimal before = player.getMoney();
-      purchase.commit(player);
-      assertTrue(player.getMoney().compareTo(before) < 0);
+    BigDecimal before = player.getMoney();
+    purchase.commit(player);
+    assertTrue(player.getMoney().compareTo(before) < 0);
   }
 
   /**
@@ -45,8 +44,8 @@ public class PurchaseTest {
    */
   @Test
   void testCommitAddsShareToPortfolio() {
-      purchase.commit(player);
-      assertTrue(player.getPortfolio().contains(share));
+    purchase.commit(player);
+    assertTrue(player.getPortfolio().contains(share));
   }
 
   /**
@@ -54,8 +53,8 @@ public class PurchaseTest {
    */
   @Test
   void testCommitRecordedInArchive() {
-      purchase.commit(player);
-      assertTrue(player.getTransactionArchive().getAllTransactions().contains(purchase));
+    purchase.commit(player);
+    assertTrue(player.getTransactionArchive().getAllTransactions().contains(purchase));
   }
 
   /**
@@ -63,8 +62,8 @@ public class PurchaseTest {
    */
   @Test
   void testCommitSetsCommittedFlag() {
-      purchase.commit(player);
-      assertTrue(purchase.isCommitted());
+    purchase.commit(player);
+    assertTrue(purchase.isCommitted());
   }
 
   /**
@@ -72,7 +71,7 @@ public class PurchaseTest {
    */
   @Test
   void testGetShareReturnsCorrectShare() {
-      assertEquals(share, purchase.getShare());
+    assertEquals(share, purchase.getShare());
   }
 
   /**
@@ -80,7 +79,7 @@ public class PurchaseTest {
    */
   @Test
   void testGetWeekReturnsCorrectWeek() {
-      assertEquals(1, purchase.getWeek());
+    assertEquals(1, purchase.getWeek());
   }
 
   // ---- Negative tests ----
@@ -90,9 +89,9 @@ public class PurchaseTest {
    */
   @Test
   void testCommitNullPlayerThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          purchase.commit(null)
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        purchase.commit(null)
+    );
   }
 
   /**
@@ -100,10 +99,10 @@ public class PurchaseTest {
    */
   @Test
   void testCommitInsufficientFundsThrows() {
-      Player poorPlayer = new Player("Broke", new BigDecimal("1"));
-      assertThrows(IllegalStateException.class, () ->
-          purchase.commit(poorPlayer)
-      );
+    Player poorPlayer = new Player("Broke", new BigDecimal("1"));
+    assertThrows(IllegalStateException.class, () ->
+        purchase.commit(poorPlayer)
+    );
   }
 
   /**
@@ -111,10 +110,10 @@ public class PurchaseTest {
    */
   @Test
   void testCommitAlreadyCommittedThrows() {
-      purchase.commit(player);
-      assertThrows(IllegalStateException.class, () ->
-          purchase.commit(player)
-      );
+    purchase.commit(player);
+    assertThrows(IllegalStateException.class, () ->
+        purchase.commit(player)
+    );
   }
 
   /**
@@ -122,9 +121,9 @@ public class PurchaseTest {
    */
   @Test
   void testConstructorWeekZeroThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          new Purchase(share, 0)
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        new Purchase(share, 0)
+    );
   }
 
   /**
@@ -132,9 +131,9 @@ public class PurchaseTest {
    */
   @Test
   void testConstructorNegativeWeekThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          new Purchase(share, -5)
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        new Purchase(share, -5)
+    );
   }
 }
 

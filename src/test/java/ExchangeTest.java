@@ -27,15 +27,15 @@ public class ExchangeTest {
 
   @BeforeEach
   void setUp() {
-      apple = new Stock("AAPL", "Apple", new BigDecimal("100"));
-      google = new Stock("GOOGL", "Google", new BigDecimal("200"));
+    apple = new Stock("AAPL", "Apple", new BigDecimal("100"));
+    google = new Stock("GOOGL", "Google", new BigDecimal("200"));
 
-      List<Stock> stocks = new ArrayList<>();
-      stocks.add(apple);
-      stocks.add(google);
+    List<Stock> stocks = new ArrayList<>();
+    stocks.add(apple);
+    stocks.add(google);
 
-      exchange = new Exchange("TestExchange", stocks);
-      player = new Player("Jane", new BigDecimal("500000"));
+    exchange = new Exchange("TestExchange", stocks);
+    player = new Player("Jane", new BigDecimal("500000"));
   }
 
   // ---- Positive tests ----
@@ -45,7 +45,7 @@ public class ExchangeTest {
    */
   @Test
   void testGetName() {
-      assertEquals("TestExchange", exchange.getName());
+    assertEquals("TestExchange", exchange.getName());
   }
 
   /**
@@ -53,7 +53,7 @@ public class ExchangeTest {
    */
   @Test
   void testInitialWeekIsOne() {
-      assertEquals(1, exchange.getWeek());
+    assertEquals(1, exchange.getWeek());
   }
 
   /**
@@ -61,8 +61,8 @@ public class ExchangeTest {
    */
   @Test
   void testAdvanceIncrementsWeek() {
-      exchange.advance();
-      assertEquals(2, exchange.getWeek());
+    exchange.advance();
+    assertEquals(2, exchange.getWeek());
   }
 
   /**
@@ -70,7 +70,7 @@ public class ExchangeTest {
    */
   @Test
   void testHasStockReturnsTrue() {
-      assertTrue(exchange.hasStock("AAPL"));
+    assertTrue(exchange.hasStock("AAPL"));
   }
 
   /**
@@ -78,7 +78,7 @@ public class ExchangeTest {
    */
   @Test
   void testHasStockReturnsFalse() {
-      assertFalse(exchange.hasStock("MSFT"));
+    assertFalse(exchange.hasStock("MSFT"));
   }
 
   /**
@@ -86,7 +86,7 @@ public class ExchangeTest {
    */
   @Test
   void testGetStockReturnsCorrectStock() {
-      assertEquals(apple, exchange.getStock("AAPL"));
+    assertEquals(apple, exchange.getStock("AAPL"));
   }
 
   /**
@@ -94,7 +94,7 @@ public class ExchangeTest {
    */
   @Test
   void testGetStockReturnsNullForUnknown() {
-      assertNull(exchange.getStock("MSFT"));
+    assertNull(exchange.getStock("MSFT"));
   }
 
   /**
@@ -102,9 +102,9 @@ public class ExchangeTest {
    */
   @Test
   void testFindStocksBySymbol() {
-      List<Stock> result = exchange.findStocks("AAPL");
-      assertEquals(1, result.size());
-      assertEquals("AAPL", result.get(0).getSymbol());
+    List<Stock> result = exchange.findStocks("AAPL");
+    assertEquals(1, result.size());
+    assertEquals("AAPL", result.get(0).getSymbol());
   }
 
   /**
@@ -112,8 +112,8 @@ public class ExchangeTest {
    */
   @Test
   void testFindStocksByCompanyName() {
-      List<Stock> result = exchange.findStocks("e");
-      assertEquals(2, result.size());
+    List<Stock> result = exchange.findStocks("e");
+    assertEquals(2, result.size());
   }
 
   /**
@@ -121,8 +121,8 @@ public class ExchangeTest {
    */
   @Test
   void testFindStocksNoMatch() {
-      List<Stock> result = exchange.findStocks("Samsung");
-      assertEquals(0, result.size());
+    List<Stock> result = exchange.findStocks("Samsung");
+    assertEquals(0, result.size());
   }
 
   /**
@@ -130,8 +130,8 @@ public class ExchangeTest {
    */
   @Test
   void testFindStocksEmptyTermReturnsAll() {
-      List<Stock> result = exchange.findStocks("");
-      assertEquals(2, result.size());
+    List<Stock> result = exchange.findStocks("");
+    assertEquals(2, result.size());
   }
 
   /**
@@ -139,10 +139,10 @@ public class ExchangeTest {
    */
   @Test
   void testBuyReturnsCommittedPurchase() {
-      Transaction t = exchange.buy("AAPL", new BigDecimal("5"), player);
-      assertNotNull(t);
-      assertTrue(t.isCommitted());
-      assertInstanceOf(Purchase.class, t);
+    Transaction t = exchange.buy("AAPL", new BigDecimal("5"), player);
+    assertNotNull(t);
+    assertTrue(t.isCommitted());
+    assertInstanceOf(Purchase.class, t);
   }
 
   /**
@@ -150,9 +150,9 @@ public class ExchangeTest {
    */
   @Test
   void testBuyDeductsMoneyFromPlayer() {
-      BigDecimal before = player.getMoney();
-      exchange.buy("AAPL", new BigDecimal("5"), player);
-      assertTrue(player.getMoney().compareTo(before) < 0);
+    BigDecimal before = player.getMoney();
+    exchange.buy("AAPL", new BigDecimal("5"), player);
+    assertTrue(player.getMoney().compareTo(before) < 0);
   }
 
   /**
@@ -160,8 +160,8 @@ public class ExchangeTest {
    */
   @Test
   void testBuyAddsShareToPortfolio() {
-      exchange.buy("AAPL", new BigDecimal("5"), player);
-      assertFalse(player.getPortfolio().getShares("AAPL").isEmpty());
+    exchange.buy("AAPL", new BigDecimal("5"), player);
+    assertFalse(player.getPortfolio().getShares("AAPL").isEmpty());
   }
 
   /**
@@ -169,13 +169,13 @@ public class ExchangeTest {
    */
   @Test
   void testSellReturnsCommittedSale() {
-      exchange.buy("AAPL", new BigDecimal("5"), player);
-      Share share = player.getPortfolio().getShares("AAPL").get(0);
+    exchange.buy("AAPL", new BigDecimal("5"), player);
+    Share share = player.getPortfolio().getShares("AAPL").get(0);
 
-      Transaction t = exchange.sell(share, player);
-      assertNotNull(t);
-      assertTrue(t.isCommitted());
-      assertInstanceOf(Sale.class, t);
+    Transaction t = exchange.sell(share, player);
+    assertNotNull(t);
+    assertTrue(t.isCommitted());
+    assertInstanceOf(Sale.class, t);
   }
 
   /**
@@ -183,12 +183,12 @@ public class ExchangeTest {
    */
   @Test
   void testSellAddsMoney() {
-      exchange.buy("AAPL", new BigDecimal("5"), player);
-      Share share = player.getPortfolio().getShares("AAPL").get(0);
-      BigDecimal before = player.getMoney();
+    exchange.buy("AAPL", new BigDecimal("5"), player);
+    Share share = player.getPortfolio().getShares("AAPL").get(0);
+    BigDecimal before = player.getMoney();
 
-      exchange.sell(share, player);
-      assertTrue(player.getMoney().compareTo(before) > 0);
+    exchange.sell(share, player);
+    assertTrue(player.getMoney().compareTo(before) > 0);
   }
 
   /**
@@ -196,11 +196,11 @@ public class ExchangeTest {
    */
   @Test
   void testSellRemovesShareFromPortfolio() {
-      exchange.buy("AAPL", new BigDecimal("5"), player);
-      Share share = player.getPortfolio().getShares("AAPL").get(0);
+    exchange.buy("AAPL", new BigDecimal("5"), player);
+    Share share = player.getPortfolio().getShares("AAPL").get(0);
 
-      exchange.sell(share, player);
-      assertTrue(player.getPortfolio().getShares("AAPL").isEmpty());
+    exchange.sell(share, player);
+    assertTrue(player.getPortfolio().getShares("AAPL").isEmpty());
   }
 
   /**
@@ -208,9 +208,9 @@ public class ExchangeTest {
    */
   @Test
   void testGetGainersReturnsRequestedLimit() {
-      exchange.advance(); // prices must have changed at least once for a meaningful sort
-      List<Stock> gainers = exchange.getGainers(1);
-      assertEquals(1, gainers.size());
+    exchange.advance(); // prices must have changed at least once for a meaningful sort
+    List<Stock> gainers = exchange.getGainers(1);
+    assertEquals(1, gainers.size());
   }
 
   /**
@@ -218,9 +218,9 @@ public class ExchangeTest {
    */
   @Test
   void testGetLosersReturnsRequestedLimit() {
-      exchange.advance();
-      List<Stock> losers = exchange.getLosers(1);
-      assertEquals(1, losers.size());
+    exchange.advance();
+    List<Stock> losers = exchange.getLosers(1);
+    assertEquals(1, losers.size());
   }
 
   // ---- Negative tests ----
@@ -230,9 +230,9 @@ public class ExchangeTest {
    */
   @Test
   void testConstructorNullNameThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          new Exchange(null, List.of(apple))
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        new Exchange(null, List.of(apple))
+    );
   }
 
   /**
@@ -240,9 +240,9 @@ public class ExchangeTest {
    */
   @Test
   void testConstructorBlankNameThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          new Exchange("  ", List.of(apple))
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        new Exchange("  ", List.of(apple))
+    );
   }
 
   /**
@@ -250,9 +250,9 @@ public class ExchangeTest {
    */
   @Test
   void testConstructorNullStockListThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          new Exchange("X", null)
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        new Exchange("X", null)
+    );
   }
 
   /**
@@ -260,12 +260,12 @@ public class ExchangeTest {
    */
   @Test
   void testConstructorNullStockEntryThrows() {
-      List<Stock> withNull = new ArrayList<>();
-      withNull.add(apple);
-      withNull.add(null);
-      assertThrows(IllegalArgumentException.class, () ->
-          new Exchange("X", withNull)
-      );
+    List<Stock> withNull = new ArrayList<>();
+    withNull.add(apple);
+    withNull.add(null);
+    assertThrows(IllegalArgumentException.class, () ->
+        new Exchange("X", withNull)
+    );
   }
 
   /**
@@ -273,9 +273,9 @@ public class ExchangeTest {
    */
   @Test
   void testBuyNullSymbolThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          exchange.buy(null, new BigDecimal("5"), player)
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        exchange.buy(null, new BigDecimal("5"), player)
+    );
   }
 
   /**
@@ -283,9 +283,9 @@ public class ExchangeTest {
    */
   @Test
   void testBuyUnknownSymbolThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          exchange.buy("MSFT", new BigDecimal("5"), player)
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        exchange.buy("MSFT", new BigDecimal("5"), player)
+    );
   }
 
   /**
@@ -293,9 +293,9 @@ public class ExchangeTest {
    */
   @Test
   void testBuyZeroQuantityThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          exchange.buy("AAPL", BigDecimal.ZERO, player)
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        exchange.buy("AAPL", BigDecimal.ZERO, player)
+    );
   }
 
   /**
@@ -303,9 +303,9 @@ public class ExchangeTest {
    */
   @Test
   void testBuyNegativeQuantityThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          exchange.buy("AAPL", new BigDecimal("-1"), player)
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        exchange.buy("AAPL", new BigDecimal("-1"), player)
+    );
   }
 
   /**
@@ -313,9 +313,9 @@ public class ExchangeTest {
    */
   @Test
   void testBuyNullPlayerThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          exchange.buy("AAPL", new BigDecimal("5"), null)
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        exchange.buy("AAPL", new BigDecimal("5"), null)
+    );
   }
 
   /**
@@ -323,10 +323,10 @@ public class ExchangeTest {
    */
   @Test
   void testBuyInsufficientFundsThrows() {
-      Player poorPlayer = new Player("Broke", new BigDecimal("1"));
-      assertThrows(IllegalStateException.class, () ->
-          exchange.buy("AAPL", new BigDecimal("5"), poorPlayer)
-      );
+    Player poorPlayer = new Player("Broke", new BigDecimal("1"));
+    assertThrows(IllegalStateException.class, () ->
+        exchange.buy("AAPL", new BigDecimal("5"), poorPlayer)
+    );
   }
 
   /**
@@ -334,11 +334,11 @@ public class ExchangeTest {
    */
   @Test
   void testSellNullPlayerThrows() {
-      exchange.buy("AAPL", new BigDecimal("5"), player);
-      Share share = player.getPortfolio().getShares("AAPL").get(0);
-      assertThrows(IllegalArgumentException.class, () ->
-          exchange.sell(share, null)
-      );
+    exchange.buy("AAPL", new BigDecimal("5"), player);
+    Share share = player.getPortfolio().getShares("AAPL").get(0);
+    assertThrows(IllegalArgumentException.class, () ->
+        exchange.sell(share, null)
+    );
   }
 
   /**
@@ -346,10 +346,10 @@ public class ExchangeTest {
    */
   @Test
   void testSellShareNotInPortfolioThrows() {
-      Share unowned = new Share(apple, new BigDecimal("1"), new BigDecimal("100"));
-      assertThrows(IllegalStateException.class, () ->
-          exchange.sell(unowned, player)
-      );
+    Share unowned = new Share(apple, new BigDecimal("1"), new BigDecimal("100"));
+    assertThrows(IllegalStateException.class, () ->
+        exchange.sell(unowned, player)
+    );
   }
 
   /**
@@ -357,9 +357,9 @@ public class ExchangeTest {
    */
   @Test
   void testAddNullObserverThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          exchange.addObserver(null)
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        exchange.addObserver(null)
+    );
   }
 }
 

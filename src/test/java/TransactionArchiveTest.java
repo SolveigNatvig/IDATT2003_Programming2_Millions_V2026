@@ -25,11 +25,11 @@ public class TransactionArchiveTest {
 
   @BeforeEach
   void setUp() {
-  archive = new TransactionArchive();
-  stock = new Stock("AAPL", "Apple", new BigDecimal("100"));
-  share = new Share(stock, new BigDecimal("10"), new BigDecimal("90"));
-  purchase = new Purchase(share, 1);
-  sale = new Sale(share, 2);
+    archive = new TransactionArchive();
+    stock = new Stock("AAPL", "Apple", new BigDecimal("100"));
+    share = new Share(stock, new BigDecimal("10"), new BigDecimal("90"));
+    purchase = new Purchase(share, 1);
+    sale = new Sale(share, 2);
   }
 
   // ---- Positive tests ----
@@ -39,7 +39,7 @@ public class TransactionArchiveTest {
    */
   @Test
   void testIsEmptyOnCreation() {
-  assertTrue(archive.isEmpty());
+    assertTrue(archive.isEmpty());
   }
 
   /**
@@ -47,8 +47,8 @@ public class TransactionArchiveTest {
    */
   @Test
   void testIsEmptyAfterAdd() {
-  archive.add(purchase);
-  assertFalse(archive.isEmpty());
+    archive.add(purchase);
+    assertFalse(archive.isEmpty());
   }
 
   /**
@@ -56,7 +56,7 @@ public class TransactionArchiveTest {
    */
   @Test
   void testAddReturnsTrue() {
-  assertTrue(archive.add(purchase));
+    assertTrue(archive.add(purchase));
   }
 
   /**
@@ -64,9 +64,9 @@ public class TransactionArchiveTest {
    */
   @Test
   void testGetAllTransactions() {
-      archive.add(purchase);
-      archive.add(sale);
-      assertEquals(2, archive.getAllTransactions().size());
+    archive.add(purchase);
+    archive.add(sale);
+    assertEquals(2, archive.getAllTransactions().size());
   }
 
   /**
@@ -74,10 +74,10 @@ public class TransactionArchiveTest {
    */
   @Test
   void testGetAllTransactionsIsDefensiveCopy() {
-      archive.add(purchase);
-      List<?> copy = archive.getAllTransactions();
-      copy.clear();
-      assertEquals(1, archive.getAllTransactions().size());
+    archive.add(purchase);
+    List<?> copy = archive.getAllTransactions();
+    copy.clear();
+    assertEquals(1, archive.getAllTransactions().size());
   }
 
   /**
@@ -85,12 +85,12 @@ public class TransactionArchiveTest {
    */
   @Test
   void testGetTransactionsByWeek() {
-      archive.add(purchase); // week 1
-      archive.add(sale);     // week 2
+    archive.add(purchase); // week 1
+    archive.add(sale);     // week 2
 
-      List<?> week1 = archive.getTransactions(1);
-      assertEquals(1, week1.size());
-      assertTrue(week1.contains(purchase));
+    List<?> week1 = archive.getTransactions(1);
+    assertEquals(1, week1.size());
+    assertTrue(week1.contains(purchase));
   }
 
   /**
@@ -98,8 +98,8 @@ public class TransactionArchiveTest {
    */
   @Test
   void testGetTransactionsByWeekNoMatch() {
-      archive.add(purchase); // week 1
-      assertTrue(archive.getTransactions(99).isEmpty());
+    archive.add(purchase); // week 1
+    assertTrue(archive.getTransactions(99).isEmpty());
   }
 
   /**
@@ -107,12 +107,12 @@ public class TransactionArchiveTest {
    */
   @Test
   void testGetPurchaseByWeek() {
-      archive.add(purchase); // week 1
-      archive.add(sale);     // week 2
+    archive.add(purchase); // week 1
+    archive.add(sale);     // week 2
 
-      List<Purchase> purchases = archive.getPurchase(1);
-      assertEquals(1, purchases.size());
-      assertTrue(purchases.contains(purchase));
+    List<Purchase> purchases = archive.getPurchase(1);
+    assertEquals(1, purchases.size());
+    assertTrue(purchases.contains(purchase));
   }
 
   /**
@@ -120,11 +120,11 @@ public class TransactionArchiveTest {
    */
   @Test
   void testGetPurchaseByWeekExcludesSales() {
-      // Add a sale at week 1 — should not appear in getPurchase(1)
-      Sale saleWeek1 = new Sale(share, 1);
-      archive.add(saleWeek1);
+    // Add a sale at week 1 — should not appear in getPurchase(1)
+    Sale saleWeek1 = new Sale(share, 1);
+    archive.add(saleWeek1);
 
-      assertTrue(archive.getPurchase(1).isEmpty());
+    assertTrue(archive.getPurchase(1).isEmpty());
   }
 
   /**
@@ -132,12 +132,12 @@ public class TransactionArchiveTest {
    */
   @Test
   void testGetSaleByWeek() {
-      archive.add(purchase); // week 1
-      archive.add(sale);     // week 2
+    archive.add(purchase); // week 1
+    archive.add(sale);     // week 2
 
-      List<Sale> sales = archive.getSale(2);
-      assertEquals(1, sales.size());
-      assertTrue(sales.contains(sale));
+    List<Sale> sales = archive.getSale(2);
+    assertEquals(1, sales.size());
+    assertTrue(sales.contains(sale));
   }
 
   /**
@@ -145,11 +145,11 @@ public class TransactionArchiveTest {
    */
   @Test
   void testGetSaleByWeekExcludesPurchases() {
-      // Add a purchase at week 2 — should not appear in getSale(2)
-      Purchase purchaseWeek2 = new Purchase(share, 2);
-      archive.add(purchaseWeek2);
+    // Add a purchase at week 2 — should not appear in getSale(2)
+    Purchase purchaseWeek2 = new Purchase(share, 2);
+    archive.add(purchaseWeek2);
 
-      assertTrue(archive.getSale(2).isEmpty());
+    assertTrue(archive.getSale(2).isEmpty());
   }
 
   /**
@@ -157,7 +157,7 @@ public class TransactionArchiveTest {
    */
   @Test
   void testCountDistinctWeeksEmpty() {
-      assertEquals(0, archive.countDistinctWeeks());
+    assertEquals(0, archive.countDistinctWeeks());
   }
 
   /**
@@ -165,10 +165,10 @@ public class TransactionArchiveTest {
    */
   @Test
   void testCountDistinctWeeksMultipleTransactionsSameWeek() {
-      Purchase purchase2 = new Purchase(share, 1);
-      archive.add(purchase);
-      archive.add(purchase2);
-      assertEquals(1, archive.countDistinctWeeks());
+    Purchase purchase2 = new Purchase(share, 1);
+    archive.add(purchase);
+    archive.add(purchase2);
+    assertEquals(1, archive.countDistinctWeeks());
   }
 
   /**
@@ -176,9 +176,9 @@ public class TransactionArchiveTest {
    */
   @Test
   void testCountDistinctWeeksAcrossWeeks() {
-      archive.add(purchase); // week 1
-      archive.add(sale);     // week 2
-      assertEquals(2, archive.countDistinctWeeks());
+    archive.add(purchase); // week 1
+    archive.add(sale);     // week 2
+    assertEquals(2, archive.countDistinctWeeks());
   }
 
   // ---- Negative tests ----
@@ -188,8 +188,8 @@ public class TransactionArchiveTest {
    */
   @Test
   void testAddNullThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          archive.add(null)
+    assertThrows(IllegalArgumentException.class, () ->
+        archive.add(null)
       );
   }
 }

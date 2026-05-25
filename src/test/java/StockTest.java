@@ -17,7 +17,7 @@ public class StockTest {
 
   @BeforeEach
   void setUp() {
-      stock = new Stock("AAPL", "Apple", new BigDecimal("1000"));
+    stock = new Stock("AAPL", "Apple", new BigDecimal("1000"));
   }
 
   // ---- Positive tests ----
@@ -27,7 +27,7 @@ public class StockTest {
    */
   @Test
   void testGetSymbol() {
-      assertEquals("AAPL", stock.getSymbol());
+    assertEquals("AAPL", stock.getSymbol());
   }
 
   /**
@@ -35,7 +35,7 @@ public class StockTest {
    */
   @Test
   void testGetCompany() {
-      assertEquals("Apple", stock.getCompany());
+    assertEquals("Apple", stock.getCompany());
   }
 
   /**
@@ -43,7 +43,7 @@ public class StockTest {
    */
   @Test
   void testGetSalesPrice() {
-      assertEquals(new BigDecimal("1000"), stock.getSalesPrice());
+    assertEquals(new BigDecimal("1000"), stock.getSalesPrice());
   }
 
   /**
@@ -51,8 +51,8 @@ public class StockTest {
    */
   @Test
   void testGetSalesPriceZero() {
-      Stock zeroStock = new Stock("ZERO", "ZeroCorp", new BigDecimal("0"));
-      assertEquals(new BigDecimal("0"), zeroStock.getSalesPrice());
+    Stock zeroStock = new Stock("ZERO", "ZeroCorp", new BigDecimal("0"));
+    assertEquals(new BigDecimal("0"), zeroStock.getSalesPrice());
   }
 
   /**
@@ -60,8 +60,8 @@ public class StockTest {
    */
   @Test
   void testAddNewSalesPrice() {
-      stock.addNewSalesPrice(new BigDecimal("1200"));
-      assertEquals(new BigDecimal("1200"), stock.getSalesPrice());
+    stock.addNewSalesPrice(new BigDecimal("1200"));
+    assertEquals(new BigDecimal("1200"), stock.getSalesPrice());
   }
 
   /**
@@ -69,8 +69,8 @@ public class StockTest {
    */
   @Test
   void testAddNewSalesPriceZero() {
-      stock.addNewSalesPrice(new BigDecimal("0"));
-      assertEquals(new BigDecimal("0"), stock.getSalesPrice());
+    stock.addNewSalesPrice(new BigDecimal("0"));
+    assertEquals(new BigDecimal("0"), stock.getSalesPrice());
   }
 
   /**
@@ -78,9 +78,9 @@ public class StockTest {
    */
   @Test
   void testGetHistoricalPricesInitial() {
-      List<BigDecimal> history = stock.getHistoricalPrices();
-      assertEquals(1, history.size());
-      assertEquals(new BigDecimal("1000"), history.get(0));
+    List<BigDecimal> history = stock.getHistoricalPrices();
+    assertEquals(1, history.size());
+    assertEquals(new BigDecimal("1000"), history.get(0));
   }
 
   /**
@@ -88,9 +88,9 @@ public class StockTest {
    */
   @Test
   void testGetHistoricalPricesAfterUpdates() {
-      stock.addNewSalesPrice(new BigDecimal("1100"));
-      stock.addNewSalesPrice(new BigDecimal("1200"));
-      assertEquals(3, stock.getHistoricalPrices().size());
+    stock.addNewSalesPrice(new BigDecimal("1100"));
+    stock.addNewSalesPrice(new BigDecimal("1200"));
+    assertEquals(3, stock.getHistoricalPrices().size());
   }
 
   /**
@@ -98,9 +98,9 @@ public class StockTest {
    */
   @Test
   void testGetHighestPrice() {
-      stock.addNewSalesPrice(new BigDecimal("1500"));
-      stock.addNewSalesPrice(new BigDecimal("800"));
-      assertEquals(new BigDecimal("1500"), stock.getHighestPrice());
+    stock.addNewSalesPrice(new BigDecimal("1500"));
+    stock.addNewSalesPrice(new BigDecimal("800"));
+    assertEquals(new BigDecimal("1500"), stock.getHighestPrice());
   }
 
   /**
@@ -108,9 +108,9 @@ public class StockTest {
    */
   @Test
   void testGetLowestPrice() {
-      stock.addNewSalesPrice(new BigDecimal("1500"));
-      stock.addNewSalesPrice(new BigDecimal("800"));
-      assertEquals(new BigDecimal("800"), stock.getLowestPrice());
+    stock.addNewSalesPrice(new BigDecimal("1500"));
+    stock.addNewSalesPrice(new BigDecimal("800"));
+    assertEquals(new BigDecimal("800"), stock.getLowestPrice());
   }
 
   /**
@@ -118,8 +118,8 @@ public class StockTest {
    */
   @Test
   void testGetLatestPriceChangePositive() {
-      stock.addNewSalesPrice(new BigDecimal("1100"));
-      assertEquals(new BigDecimal("100"), stock.getLatestPriceChange());
+    stock.addNewSalesPrice(new BigDecimal("1100"));
+    assertEquals(new BigDecimal("100"), stock.getLatestPriceChange());
   }
 
   /**
@@ -127,8 +127,8 @@ public class StockTest {
    */
   @Test
   void testGetLatestPriceChangeNegative() {
-      stock.addNewSalesPrice(new BigDecimal("900"));
-      assertEquals(new BigDecimal("-100"), stock.getLatestPriceChange());
+    stock.addNewSalesPrice(new BigDecimal("900"));
+    assertEquals(new BigDecimal("-100"), stock.getLatestPriceChange());
   }
 
   /**
@@ -136,7 +136,7 @@ public class StockTest {
    */
   @Test
   void testGetLatestPriceChangeOnlyOnePrice() {
-      assertEquals(BigDecimal.ZERO, stock.getLatestPriceChange());
+    assertEquals(BigDecimal.ZERO, stock.getLatestPriceChange());
   }
 
   /**
@@ -144,9 +144,9 @@ public class StockTest {
    */
   @Test
   void testHistoricalPricesIsDefensiveCopy() {
-      List<BigDecimal> history = stock.getHistoricalPrices();
-      history.add(new BigDecimal("9999"));
-      assertEquals(1, stock.getHistoricalPrices().size());
+    List<BigDecimal> history = stock.getHistoricalPrices();
+    history.add(new BigDecimal("9999"));
+    assertEquals(1, stock.getHistoricalPrices().size());
   }
 
   // ---- Negative tests ----
@@ -156,9 +156,9 @@ public class StockTest {
    */
   @Test
   void testNullSymbolThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          new Stock(null, "Apple", new BigDecimal("100"))
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        new Stock(null, "Apple", new BigDecimal("100"))
+    );
   }
 
   /**
@@ -166,9 +166,9 @@ public class StockTest {
    */
   @Test
   void testBlankSymbolThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          new Stock("  ", "Apple", new BigDecimal("100"))
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        new Stock("  ", "Apple", new BigDecimal("100"))
+    );
   }
 
   /**
@@ -176,9 +176,9 @@ public class StockTest {
    */
   @Test
   void testNullCompanyThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          new Stock("AAPL", null, new BigDecimal("100"))
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        new Stock("AAPL", null, new BigDecimal("100"))
+    );
   }
 
   /**
@@ -186,9 +186,9 @@ public class StockTest {
    */
   @Test
   void testBlankCompanyThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          new Stock("AAPL", "  ", new BigDecimal("100"))
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        new Stock("AAPL", "  ", new BigDecimal("100"))
+    );
   }
 
   /**
@@ -196,9 +196,9 @@ public class StockTest {
    */
   @Test
   void testNullInitialPriceThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          new Stock("AAPL", "Apple", null)
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        new Stock("AAPL", "Apple", null)
+    );
   }
 
   /**
@@ -206,9 +206,9 @@ public class StockTest {
    */
   @Test
   void testNegativeInitialPriceThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          new Stock("AAPL", "Apple", new BigDecimal("-1"))
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        new Stock("AAPL", "Apple", new BigDecimal("-1"))
+    );
   }
 
   /**
@@ -216,9 +216,9 @@ public class StockTest {
    */
   @Test
   void testAddNullPriceThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          stock.addNewSalesPrice(null)
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        stock.addNewSalesPrice(null)
+    );
   }
 
   /**
@@ -226,9 +226,9 @@ public class StockTest {
    */
   @Test
   void testAddNegativePriceThrows() {
-      assertThrows(IllegalArgumentException.class, () ->
-          stock.addNewSalesPrice(new BigDecimal("-10"))
-      );
+    assertThrows(IllegalArgumentException.class, () ->
+        stock.addNewSalesPrice(new BigDecimal("-10"))
+    );
   }
 }
 
