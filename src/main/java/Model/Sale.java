@@ -3,13 +3,30 @@ package Model;
 import java.math.BigDecimal;
 
 /**
- * Sale class for whenever the player makes a sale.
+ * Represents a stock sale transaction.
+ * A Sale transaction represents a player selling shares from their portfolio.
+ * When committed, it adds money to the player's account, removes the shares from
+ * their portfolio, and records the transaction in the archive.
  */
 public class Sale extends Transaction {
+  /**
+   * Constructs a new Sale transaction.
+   *
+   * @param share the share to sell. Cannot be null
+   * @param week the week number when the sale occurs. Must be at least 1
+   */
   public Sale(Share share, int week) {
     super(share, week, new SaleCalculator(share));
   }
 
+  /**
+   * Commits this sale transaction, crediting funds and removing shares from the portfolio.
+   *
+   * @param player the player executing the sale. Cannot be null
+   * @throws IllegalArgumentException if player is null
+   * @throws IllegalStateException if sale has already been committed or if the
+   *         player does not own the share being sold
+   */
   @Override
   public void commit(Player player) {
     if (player == null) {

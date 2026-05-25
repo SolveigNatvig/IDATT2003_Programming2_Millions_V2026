@@ -1,12 +1,13 @@
 package Model;
 
 /**
- * Enum representing the player's status level based on trading activity and performance.
-
- * Status levels:
- * - NOVICE: Starting level, no requirements
- * - INVESTOR: Traded for at least 10 weeks AND increased net worth by at least 20%
- * - SPECULATOR: Traded for at least 20 weeks AND doubled the net worth (100% increase)
+ * Enum representing the player's trading status level.
+ * Status levels are determined by trading activity (weeks with transactions)
+ * and net worth performance compared to starting capital.
+ * Levels:
+ * - NOVICE: Initial status (default)
+ * - INVESTOR: 10+ weeks of trading AND net worth increased by 20%
+ * - SPECULATOR: 20+ weeks of trading AND net worth doubled
  */
 public enum PlayerStatus {
     NOVICE("Novice"),
@@ -15,10 +16,20 @@ public enum PlayerStatus {
 
   private final String displayName;
 
+  /**
+   * Constructs a PlayerStatus with the given display name.
+   *
+   * @param displayName the name for UI display
+   */
   PlayerStatus(String displayName) {
     this.displayName = displayName;
   }
 
+  /**
+   * Returns the display name for this status.
+   *
+   * @return the display name
+   */
   public String getDisplayName() {
     return displayName;
   }

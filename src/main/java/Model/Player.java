@@ -3,8 +3,10 @@ package Model;
 import java.math.BigDecimal;
 
 /**
- * The player class is a description of the person player the game, 
- * their starting point and their progress.
+ * Represents a player in the stock trading game.
+ * A Player manages their personal portfolio of shares, cash balance, and transaction
+ * history. Players can buy and sell stocks, and their performance is tracked through
+ * status levels based on trading activity and net worth growth.
  */
 public class Player {
   private String name;
@@ -14,10 +16,11 @@ public class Player {
   private TransactionArchive transactionArchive;
 
   /**
-   * Player method that includes the players name and the money they start with.
+   * Constructs a new Player with the given name and starting capital.
    *
-   * @param name the name of the player
-   * @param startingMoney money the player starts with
+   * @param name the player's name. Cannot be null or blank
+   * @param startingMoney the initial cash balance. Cannot be null or negative
+   * @throws IllegalArgumentException if any parameter is invalid
    */
   public Player(String name, BigDecimal startingMoney) {
     if (name == null || name.isBlank()) {
@@ -37,18 +40,29 @@ public class Player {
     this.transactionArchive = new TransactionArchive();
   }
 
+  /**
+   * Returns the player's name.
+   *
+   * @return the player's name
+   */
   public String getName() {
     return this.name;
   }
 
+  /**
+   * Returns the player's current cash balance.
+   *
+   * @return the current amount of money available
+   */
   public BigDecimal getMoney() {
     return this.money;
   }
 
   /**
-   * Amount of money added.
+   * Adds the specified amount to the player's cash balance.
    *
-   * @param amount amount of money
+   * @param amount the amount to add. Cannot be null or negative
+   * @throws IllegalArgumentException if amount is invalid
    */
   public void addMoney(BigDecimal amount) {
     if (amount == null) {
@@ -61,9 +75,10 @@ public class Player {
   }
 
   /**
-   * Amount of money withdrawn.
+   * Removes the specified amount from the player's cash balance.
    *
-   * @param amount amount of money
+   * @param amount the amount to withdraw. Cannot be null or negative
+   * @throws IllegalArgumentException if amount is invalid
    */
   public void withdrawMoney(BigDecimal amount) {
     if (amount == null) {
@@ -75,10 +90,20 @@ public class Player {
     this.money = this.money.subtract(amount);
   }
 
+  /**
+   * Returns the player's portfolio.
+   *
+   * @return the portfolio containing held shares
+   */
   public Portfolio getPortfolio() {
     return this.portfolio;
   }
 
+  /**
+   * Returns the player's transaction archive.
+   *
+   * @return the archive of all transactions
+   */
   public TransactionArchive getTransactionArchive() {
     return this.transactionArchive;
   }

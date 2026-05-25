@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * STock class.
+ * Represents a stock traded on the exchange.
+ * A Stock tracks the company's trading symbol, company name, and historical price
+ * data. Prices are maintained in chronological order, with the latest price being
+ * the current sales price.
  */
 public class Stock {
 
@@ -14,7 +17,12 @@ public class Stock {
   private final List<BigDecimal> prices;
 
   /**
-   * Stock method that includes symbol of the stock, company and the salesprice.
+   * Constructs a new Stock with the given symbol, company name, and initial sales price.
+   *
+   * @param symbol the unique ticker symbol (e.g., "AAPL"). Cannot be null or blank
+   * @param company the company name. Cannot be null or blank
+   * @param salesPrice the initial sales price. Cannot be null or negative
+   * @throws IllegalArgumentException if any parameter is invalid
    */
   public Stock(String symbol, String company, BigDecimal salesPrice) {
     if (symbol == null || symbol.isBlank()) {
@@ -36,20 +44,38 @@ public class Stock {
     this.prices.add(salesPrice);
   }
 
+  /**
+   * Returns the ticker symbol of this stock.
+   *
+   * @return the stock symbol
+   */
   public String getSymbol() {
     return symbol;
   }
 
+  /**
+   * Returns the company name associated with this stock.
+   *
+   * @return the company name
+   */
   public String getCompany() {
     return company;
   }
 
+  /**
+   * Returns the current (most recent) sales price of this stock.
+   *
+   * @return the current sales price
+   */
   public BigDecimal getSalesPrice() {
     return prices.get(prices.size() - 1);
   }
-    
+
   /**
-   * Method that makes new salesprice.
+   * Records a new sales price for this stock.
+   *
+   * @param price the new sales price. Cannot be null or negative
+   * @throws IllegalArgumentException if price is invalid
    */
   public void addNewSalesPrice(BigDecimal price) {
     if (price == null) {
@@ -62,7 +88,7 @@ public class Stock {
   }
 
   public List<BigDecimal> getHistoricalPrices() {
-    return new ArrayList<>(prices); // returnerer en kopi for å beskytte selve listen
+    return new ArrayList<>(prices); // returns a copy to protect the list itself
   }
 
   public BigDecimal getHighestPrice() {

@@ -18,14 +18,13 @@ import javafx.stage.Stage;
 
 /**
  * Displays the game setup scene where players configure their game parameters.
- * 
  * Allows players to enter their name, starting capital, and select a stock data file
  * before starting the main game. Notifies listeners when the game starts.
  */
 public class GameSetupScene {
 
-  private Scene scene;
-  private Consumer<StartGameData> onGameStart;
+  private final Scene scene;
+  private final Consumer<StartGameData> onGameStart;
   private File selectedFile;
   private Label fileLabel;
 
@@ -113,7 +112,7 @@ public class GameSetupScene {
     Region buttonSpacer = new Region();
     buttonSpacer.setMinHeight(10);
 
-    // Button row — buttons fill full card width equally
+    // Button row 
     HBox buttonBox = new HBox(12);
     buttonBox.setAlignment(Pos.CENTER_LEFT);
     buttonBox.setMaxWidth(Double.MAX_VALUE);
@@ -142,7 +141,7 @@ public class GameSetupScene {
         buttonBox
     );
 
-    // Center the card without stretching it vertically
+    // Centers the root
     VBox root = new VBox(card);
     root.setAlignment(Pos.CENTER);
     root.setFillWidth(false);
@@ -250,7 +249,6 @@ public class GameSetupScene {
 
   /**
    * Data class encapsulating game setup parameters.
-   * 
    * Contains the exchange configured with stocks, player name, and starting capital.
    */
   public static class StartGameData {
