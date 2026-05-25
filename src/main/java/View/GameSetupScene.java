@@ -17,7 +17,10 @@ import javafx.stage.Stage;
 
 
 /**
- * GameSetupScene class.
+ * Displays the game setup scene where players configure their game parameters.
+ * 
+ * Allows players to enter their name, starting capital, and select a stock data file
+ * before starting the main game. Notifies listeners when the game starts.
  */
 public class GameSetupScene {
 
@@ -26,11 +29,21 @@ public class GameSetupScene {
   private File selectedFile;
   private Label fileLabel;
 
+  /**
+   * Constructs a GameSetupScene with a callback for when the game starts.
+   *
+   * @param onGameStart callback invoked when the player starts the game. Cannot be null
+   */
   public GameSetupScene(Consumer<StartGameData> onGameStart) {
     this.onGameStart = onGameStart;
     this.scene = createScene();
   }
 
+  /**
+   * Creates the UI layout for the setup scene.
+   *
+   * @return the constructed Scene
+   */
   private Scene createScene() {
 
     // Card (centered cream box)
@@ -142,6 +155,12 @@ public class GameSetupScene {
     return scene;
   }
 
+  /**
+   * Validates inputs and starts the game when the Start button is clicked.
+   *
+   * @param nameField the text field containing the player name
+   * @param capitalField the text field containing the starting capital
+   */
   private void handleStart(TextField nameField, TextField capitalField) {
     String name = nameField.getText().trim();
     String capitalStr = capitalField.getText().trim();
@@ -187,6 +206,9 @@ public class GameSetupScene {
     }
   }
 
+  /**
+   * Opens a file chooser dialog to select a stock data file.
+   */
   private void selectFile() {
     FileChooser fileChooser = new FileChooser();
     fileChooser.setTitle("Select Stock Data File");
@@ -203,6 +225,12 @@ public class GameSetupScene {
     }    
   }
 
+  /**
+   * Displays an alert dialog with the given title and message.
+   *
+   * @param title the dialog title
+   * @param message the alert message
+   */
   private void showAlert(String title, String message) {
     Alert alert = new Alert(Alert.AlertType.WARNING);
     alert.setTitle(title);
@@ -211,12 +239,19 @@ public class GameSetupScene {
     alert.showAndWait();
   }
 
+  /**
+   * Returns the Scene for display in the application window.
+   *
+   * @return the setup scene
+   */
   public Scene getScene() {
     return scene;
   }
 
   /**
-   * StartGameData method.
+   * Data class encapsulating game setup parameters.
+   * 
+   * Contains the exchange configured with stocks, player name, and starting capital.
    */
   public static class StartGameData {
     public final String playerName;
