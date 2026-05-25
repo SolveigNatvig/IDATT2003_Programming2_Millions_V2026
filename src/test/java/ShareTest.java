@@ -1,5 +1,6 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import Model.Share;
@@ -7,69 +8,89 @@ import Model.Stock;
 
 import java.math.BigDecimal;
 
-
 public class ShareTest {
 
+    private Stock stock;
+
+    @BeforeEach
+    void setUp() {
+        stock = new Stock("AAPL", "Apple", new BigDecimal("150"));
+    }
+
+    // ---- Positive tests ----
+
     @Test
-    void testShareConstructor() {
-
-        Stock stock = new Stock("AAPL", "Apple", new BigDecimal("150"));
-        BigDecimal quantity = new BigDecimal("10");
-        BigDecimal purchasePrice = new BigDecimal("140");
-
-        Share share = new Share(stock, quantity, purchasePrice);
+    void testShareConstructorNotNull() {
+        Share share = new Share(stock, new BigDecimal("10"), new BigDecimal("140"));
         assertNotNull(share);
     }
 
     @Test
     void testGetStock() {
-
-        Stock stock = new Stock("AAPL", "Apple", new BigDecimal("150"));
         Share share = new Share(stock, new BigDecimal("10"), new BigDecimal("140"));
-
-        Stock result = share.getStock();
-
-        assertEquals(stock, result);
+        assertEquals(stock, share.getStock());
     }
 
     @Test
     void testGetQuantity() {
-
-        Stock stock = new Stock("AAPL", "Apple", new BigDecimal("150"));
         Share share = new Share(stock, new BigDecimal("10"), new BigDecimal("140"));
-
-        BigDecimal result = share.getQuantity();
-
-        assertEquals(new BigDecimal("10"), result);
+        assertEquals(new BigDecimal("10"), share.getQuantity());
     }
 
     @Test
     void testGetPurchasePrice() {
-
-        Stock stock = new Stock("AAPL", "Apple", new BigDecimal("150"));
         Share share = new Share(stock, new BigDecimal("10"), new BigDecimal("140"));
-
-        BigDecimal result = share.getPurchasePrice();
-
-        assertEquals(new BigDecimal("140"), result);
+        assertEquals(new BigDecimal("140"), share.getPurchasePrice());
     }
 
     @Test
-    void testNullStock() {
+    void testPurchasePriceZeroAllowed() {
+        // buying at price 0 is an edge case but not invalid
+        Share share = new Share(stock, new BigDecimal("5"), BigDecimal.ZERO);
+        assertEquals(BigDecimal.ZERO, share.getPurchasePrice());
+    }
 
-        Share share = new Share(null, new BigDecimal("10"), new BigDecimal("100"));
+    // ---- Negative tests ----
 
-        assertNull(share.getStock());
+    @Test
+    void testNullStockThrows() {
+        assertThrows(IllegalArgumentException.class, () ->
+            new Share(null, new BigDecimal("10"), new BigDecimal("100"))
+        );
     }
 
     @Test
-    void testNegativePrice() {
-
-        Stock stock = new Stock("AAPL", "Apple", new BigDecimal("150"));
-        Share share = new Share(stock, new BigDecimal("10"), new BigDecimal("-50"));
-
-        assertEquals(new BigDecimal("-50"), share.getPurchasePrice());
+    void testNullQuantityThrows() {
+        assertThrows(IllegalArgumentException.class, () ->
+            new Share(stock, null, new BigDecimal("100"))
+        );
     }
 
-    
+    @Test
+    void testZeroQuantityThrows() {
+        assertThrows(IllegalArgumentException.class, () ->
+            new Share(stock, BigDecimal.ZERO, new BigDecimal("100"))
+        );
+    }
+
+    @Test
+    void testNegativeQuantityThrows() {
+        assertThrows(IllegalArgumentException.class, () ->
+            new Share(stock, new BigDecimal("-5"), new BigDecimal("100"))
+        );
+    }
+
+    @Test
+    void testNullPurchasePriceThrows() {
+        assertThrows(IllegalArgumentException.class, () ->
+            new Share(stock, new BigDecimal("10"), null)
+        );
+    }
+
+    @Test
+    void testNegativePurchasePriceThrows() {
+        assertThrows(IllegalArgumentException.class, () ->
+            new Share(stock, new BigDecimal("10"), new BigDecimal("-50"))
+        );
+    }
 }

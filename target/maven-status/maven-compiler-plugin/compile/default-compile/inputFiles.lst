@@ -2,6 +2,7 @@ C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Control
 C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\Exchange.java
 C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\ExchangeObserver.java
 C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\Player.java
+C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\PlayerStatus.java
 C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\Portfolio.java
 C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\Purchase.java
 C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\PurchaseCalculator.java
@@ -12,6 +13,7 @@ C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\S
 C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\Transaction.java
 C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\TransactionArchive.java
 C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\TransactionCalculator.java
+C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\Model\TransactionFactory.java
 C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\View\GameSetupScene.java
 C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\View\Launcher.java
 C:\Users\elisa\Downloads\progdel1\Programmering2_mappe_v26\src\main\java\View\MainGameScene.java
