@@ -1,16 +1,16 @@
 package Model;
 
 /**
- * Observer interface for the Exchange subject.
- * Implement this interface to receive notifications whenever the exchange
- * state changes (week advances, a trade is committed).
+ * Observer interface for receiving notifications from the Exchange.
+ * Implementations are notified whenever the Exchange state changes,
+ * allowing the View and other components to stay synchronized.
  */
 public interface ExchangeObserver {
 
-    /**
-     * Called by the Exchange after its state has changed.
-     *
-     * @param exchange the Exchange that triggered the notification
-     */
-    void onExchangeUpdated(Exchange exchange);
+  /**
+   * Called by the Exchange when its state changes.
+   *
+   * @param exchange the Exchange that triggered the notification
+   */
+  void onExchangeUpdated(Exchange exchange);
 }

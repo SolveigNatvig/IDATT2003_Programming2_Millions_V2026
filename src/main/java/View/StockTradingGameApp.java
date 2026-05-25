@@ -1,49 +1,73 @@
 package View;
 
-import javafx.application.Application;
-import javafx.stage.Stage;
 import Controller.StockFileHandler;
 import Model.*;
+import javafx.application.Application;
+import javafx.stage.Stage;
 
-import java.math.BigDecimal;
-
+/**
+ * Main JavaFX application class for the Stock Trading Game.
+ * Manages the application lifecycle, window setup, scene transitions,
+ * and exchanges between the game setup and main game views.
+ */
 public class StockTradingGameApp extends Application {
-    private Stage primaryStage;
-    private Exchange exchange;
-    private Player player;
-    private StockFileHandler fileHandler;
+  private Stage primaryStage;
+  private Exchange exchange;
+  private Player player;
+  private StockFileHandler fileHandler;
 
-    @Override
-    public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-        this.fileHandler = new StockFileHandler();
+  /**
+   * Initializes and displays the primary stage.
+   *
+   * @param primaryStage the primary window stage provided by JavaFX
+   */
+  @Override
+  public void start(Stage primaryStage) {
+    this.primaryStage = primaryStage;
+    this.fileHandler = new StockFileHandler();
         
-        primaryStage.setTitle("Stock Trading Game");
-        primaryStage.setWidth(1200);
-        primaryStage.setHeight(800);
+    primaryStage.setTitle("Stock Trading Game");
+    primaryStage.setWidth(1200);
+    primaryStage.setHeight(800);
         
-        showGameSetup();
-        primaryStage.show();
-    }
+    showGameSetup();
+    primaryStage.show();
+  }
 
-    private void showGameSetup() {
-        GameSetupScene setupScene = new GameSetupScene(this::startGame);
-        primaryStage.setScene(setupScene.getScene());
-    }
+  /**
+   * Displays the game setup scene where players configure their game.
+   */
+  private void showGameSetup() {
+    GameSetupScene setupScene = new GameSetupScene(this::startGame);
+    primaryStage.setScene(setupScene.getScene());
+  }
 
-    private void startGame(GameSetupScene.StartGameData gameData) {
-        this.exchange = gameData.exchange;
-        this.player = new Player(gameData.playerName, gameData.startingCapital);
+  /**
+   * Starts the main game scene after setup is complete.
+   *
+   * @param gameData the game configuration data from the setup scene
+   */
+  private void startGame(GameSetupScene.StartGameData gameData) {
+    this.exchange = gameData.exchange;
+    this.player = new Player(gameData.playerName, gameData.startingCapital);
         
-        MainGameScene gameScene = new MainGameScene(exchange, player, this::endGame);
-        primaryStage.setScene(gameScene.getScene());
-    }
+    MainGameScene gameScene = new MainGameScene(exchange, player, this::endGame);
+    primaryStage.setScene(gameScene.getScene());
+  }
 
-    private void endGame() {
-        primaryStage.close();
-    }
+  /**
+   * Ends the game and closes the application.
+   */
+  private void endGame() {
+    primaryStage.close();
+  }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
+  /**
+   * Main method to launch the JavaFX application.
+   *
+   * @param args command-line arguments (not used)
+   */
+  public static void main(String[] args) {
+    launch(args);
+  }
 }
