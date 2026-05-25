@@ -1,4 +1,8 @@
-package Model;
+package Model.Transaction;
+
+import Model.Player.Player;
+import Model.Share;
+
 
 /**
  * Abstract base class for all transactions (purchases and sales).

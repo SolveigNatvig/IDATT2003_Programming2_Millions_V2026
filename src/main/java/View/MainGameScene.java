@@ -1,6 +1,15 @@
 package View;
 
 import Model.*;
+import Model.Exchange.Exchange;
+import Model.Exchange.ExchangeObserver;
+import Model.Player.Player;
+import Model.Player.PlayerStatus;
+import Model.Purchase.Purchase;
+import Model.Sale.Sale;
+import Model.Sale.SaleCalculator;
+import Model.Transaction.Transaction;
+
 import java.math.BigDecimal;
 import java.util.List;
 import javafx.collections.FXCollections;

@@ -1,8 +1,9 @@
 package View;
 
 import Controller.StockFileHandler;
-import Model.Exchange;
 import Model.Stock;
+import Model.Exchange.Exchange;
+
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.List;

@@ -1,11 +1,19 @@
-package Model;
+package Model.Exchange;
 
+import Model.Player.Player;
+import Model.Purchase.Purchase;
+import Model.Share;
+import Model.Stock;
+import Model.Transaction.Transaction;
+import Model.Transaction.TransactionFactory;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+
+
 
 /**
  * Represents a stock exchange where players can buy and sell stocks.

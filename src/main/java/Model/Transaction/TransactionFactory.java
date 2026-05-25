@@ -1,4 +1,9 @@
-package Model;
+package Model.Transaction;
+
+import Model.Purchase.Purchase;
+import Model.Sale.Sale;
+import Model.Share;
+
 
 /**
  * Factory for creating transaction objects.

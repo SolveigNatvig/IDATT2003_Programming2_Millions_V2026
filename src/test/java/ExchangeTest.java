@@ -1,12 +1,12 @@
 import static org.junit.jupiter.api.Assertions.*;
 
-import Model.Exchange;
-import Model.Player;
-import Model.Purchase;
-import Model.Sale;
+import Model.Exchange.Exchange;
+import Model.Player.Player;
+import Model.Purchase.Purchase;
+import Model.Sale.Sale;
 import Model.Share;
 import Model.Stock;
-import Model.Transaction;
+import Model.Transaction.Transaction;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;

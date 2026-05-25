@@ -1,6 +1,9 @@
-package Model;
+package Model.Player;
 
+import Model.Portfolio;
+import Model.Transaction.TransactionArchive;
 import java.math.BigDecimal;
+
 
 /**
  * Represents a player in the stock trading game.

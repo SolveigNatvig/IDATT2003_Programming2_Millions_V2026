@@ -1,4 +1,4 @@
-package Model;
+package Model.Player;
 
 /**
  * Enum representing the player's trading status level.
