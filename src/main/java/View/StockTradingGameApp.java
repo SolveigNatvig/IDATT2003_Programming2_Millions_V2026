@@ -2,6 +2,8 @@ package View;
 
 import Controller.StockFileHandler;
 import Model.*;
+import Model.Exchange.Exchange;
+import Model.Player.Player;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

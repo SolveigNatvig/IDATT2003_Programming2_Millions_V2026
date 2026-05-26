@@ -1,6 +1,10 @@
-package Model;
+package Model.Purchase;
 
+import Model.Player.Player;
+import Model.Share;
+import Model.Transaction.Transaction;
 import java.math.BigDecimal;
+
 
 /**
  * Represents a stock purchase transaction.

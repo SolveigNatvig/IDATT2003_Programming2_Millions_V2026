@@ -1,8 +1,10 @@
 package Model;
-                
+
+import Model.Sale.SaleCalculator;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Represents a portfolio of shares held by a player.
