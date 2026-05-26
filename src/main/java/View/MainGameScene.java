@@ -19,6 +19,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
@@ -111,12 +112,7 @@ public class MainGameScene implements ExchangeObserver {
 
     Button exitBtn = new Button("Exit");
     exitBtn.getStyleClass().add("exit-button");
-    exitBtn.setOnAction(e -> {
-      if (confirm("Exit Game?", "Final Net Worth: $" + formatMoney(getNetWorth()))) {
-        exchange.removeObserver(this); // clean up before closing
-        onExit.run();
-      }
-    });
+    exitBtn.setOnAction(e -> showEndOfGameReport());
 
     topBar.getChildren().addAll(statusLabel, sep, nextWeekBtn, exitBtn);
 
@@ -612,28 +608,28 @@ private void addStockColumns(TableView<StockRow> table) {
     GridPane summary = new GridPane();
     summary.setHgap(16);
     summary.setVgap(6);
-    addStatRow(summary, 0, "Current price:",  "$" + formatMoney(stock.getSalesPrice()));
-    addStatRow(summary, 1, "Week change:",    changeSign + formatMoney(change));
-    addStatRow(summary, 2, "All-time high:",  "$" + formatMoney(stock.getHighestPrice()));
-    addStatRow(summary, 3, "All-time low:",   "$" + formatMoney(stock.getLowestPrice()));
-    addStatRow(summary, 4, "Weeks tracked:",  String.valueOf(stock.getHistoricalPrices().size()));
+    addStatRow(summary, 0, "Current price:", "$" + formatMoney(stock.getSalesPrice()));
+    addStatRow(summary, 1, "Week change:", changeSign + formatMoney(change));
+    addStatRow(summary, 2, "All-time high:", "$" + formatMoney(stock.getHighestPrice()));
+    addStatRow(summary, 3, "All-time low:", "$" + formatMoney(stock.getLowestPrice()));
+    addStatRow(summary, 4, "Weeks tracked:", String.valueOf(stock.getHistoricalPrices().size()));
 
     // --- Price history list ---
     Label histHeading = new Label("Price history:");
-    histHeading.setStyle("-fx-font-weight: bold;");
+    histHeading.getStyleClass().add("stat-label");
 
     ListView<String> histList = new ListView<>();
     histList.setPrefHeight(180);
     List<BigDecimal> prices = stock.getHistoricalPrices();
     ObservableList<String> rows = FXCollections.observableArrayList();
     for (int i = 0; i < prices.size(); i++) {
-      String change_i = "";
+      String changeI = "";
       if (i > 0) {
         BigDecimal diff = prices.get(i).subtract(prices.get(i - 1));
-        change_i = "  (" + (diff.compareTo(BigDecimal.ZERO) >= 0 ? "+" : "") +
+        changeI = "  (" + (diff.compareTo(BigDecimal.ZERO) >= 0 ? "+" : "") +
                         formatMoney(diff) + ")";
       }
-      rows.add("Week " + (i + 1) + ":  $" + formatMoney(prices.get(i)) + change_i);
+      rows.add("Week " + (i + 1) + ":  $" + formatMoney(prices.get(i)) + changeI);
     }
     histList.setItems(rows);
 
@@ -642,16 +638,78 @@ private void addStockColumns(TableView<StockRow> table) {
 
     content.getChildren().addAll(summary, new Separator(), histHeading, histList);
     dialog.getDialogPane().setContent(content);
+
+    dialog.getDialogPane().getStylesheets().add(
+        getClass().getResource("/Style/Global.css").toExternalForm()
+    );
+
     dialog.showAndWait();
   }
 
   /** Adds a label and value to the given row. */
   private void addStatRow(GridPane grid, int row, String labelText, String valueText) {
     Label lbl = new Label(labelText);
-    lbl.setStyle("-fx-font-weight: bold;");
+    lbl.getStyleClass().add("stat-label");
     Label val = new Label(valueText);
     grid.add(lbl, 0, row);
     grid.add(val, 1, row);
+  }
+
+  /**
+   * Shows the end-of-game report when the player chooses to exit.
+   * Displays final statistics and gives the option to continue or quit.
+   */
+  private void showEndOfGameReport() {
+    BigDecimal startingMoney = player.getStartingMoney();
+    BigDecimal finalNetWorth = getNetWorth();
+    BigDecimal profit = finalNetWorth.subtract(startingMoney);
+    boolean isProfit = profit.compareTo(BigDecimal.ZERO) >= 0;
+
+    BigDecimal investmentPercent = startingMoney.compareTo(BigDecimal.ZERO) == 0
+        ? BigDecimal.ZERO
+        : profit.multiply(new BigDecimal("100")).divide(startingMoney, 2, java.math.RoundingMode.HALF_UP);
+
+    Dialog<ButtonType> dialog = new Dialog<>();
+    dialog.setTitle("Game Over");
+    dialog.getDialogPane().setPrefWidth(380);
+
+    ButtonType continueBtn = new ButtonType("Go Back", ButtonBar.ButtonData.CANCEL_CLOSE);
+    ButtonType exitBtn     = new ButtonType("Exit Game",        ButtonBar.ButtonData.OK_DONE);
+    dialog.getDialogPane().getButtonTypes().addAll(continueBtn, exitBtn);
+
+    GridPane grid = new GridPane();
+    grid.setHgap(20);
+    grid.setVgap(10);
+
+    addStatRow(grid, 0, "Player:", player.getName());
+    addStatRow(grid, 1, "Status:", player.getStatus().name());
+    addStatRow(grid, 2, "Starting capital:", "$" + formatMoney(startingMoney));
+    addStatRow(grid, 3, "Final net worth:", "$" + formatMoney(finalNetWorth));
+    addStatRow(grid, 4, "Weeks played:", String.valueOf(exchange.getWeek() - 1));
+    addStatRow(grid, 5, "Transactions:", 
+        String.valueOf(player.getTransactionArchive().getAllTransactions().size()));
+
+    String sign  = isProfit ? "+" : "";
+    Label profitLabel = new Label("Profit / Loss:");
+    profitLabel.getStyleClass().addAll("stat-label", isProfit ? "profit-label" : "loss-label");
+    Label profitValue = new Label(sign + "$" + formatMoney(profit) 
+        + "  (" + sign + investmentPercent + "%)");
+    profitValue.getStyleClass().add(isProfit ? "profit-label" : "loss-label");
+    grid.add(profitLabel, 0, 6);
+    grid.add(profitValue,  1, 6);
+
+    dialog.getDialogPane().setContent(grid);
+
+    dialog.getDialogPane().getStylesheets().add(
+        getClass().getResource("/Style/Global.css").toExternalForm()
+    );
+
+    dialog.showAndWait().ifPresent(result -> {
+      if (result == exitBtn) {
+        exchange.removeObserver(this);
+        onExit.run();
+      }
+    });
   }
 
   private void showConfirmation(String title, Transaction t) {
@@ -676,14 +734,6 @@ private void addStockColumns(TableView<StockRow> table) {
     a.setHeaderText(null);
     a.setContentText(msg);
     a.showAndWait();
-  }
-
-  private boolean confirm(String title, String msg) {
-    Alert a = new Alert(Alert.AlertType.CONFIRMATION);
-    a.setTitle(title);
-    a.setHeaderText(null);
-    a.setContentText(msg);
-    return a.showAndWait().get() == ButtonType.OK;
   }
 
   private String formatMoney(BigDecimal n) {
