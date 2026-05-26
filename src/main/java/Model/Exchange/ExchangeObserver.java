@@ -1,4 +1,4 @@
-package Model;
+package Model.Exchange;
 
 /**
  * Observer interface for receiving notifications from the Exchange.

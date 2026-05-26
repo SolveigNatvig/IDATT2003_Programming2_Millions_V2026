@@ -1,8 +1,12 @@
-package Model;
+package Model.Transaction;
 
+import Model.Purchase.Purchase;
+import Model.Sale.Sale;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+
 
 /**
  * Maintains a chronological archive of all transactions executed by a player.

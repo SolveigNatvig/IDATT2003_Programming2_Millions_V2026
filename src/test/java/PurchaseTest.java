@@ -1,7 +1,7 @@
 import static org.junit.jupiter.api.Assertions.*;
 
-import Model.Player;
-import Model.Purchase;
+import Model.Player.Player;
+import Model.Purchase.Purchase;
 import Model.Share;
 import Model.Stock;
 import java.math.BigDecimal;

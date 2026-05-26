@@ -1,5 +1,8 @@
-package Model;
+package Model.Sale;
 
+import Model.Player.Player;
+import Model.Share;
+import Model.Transaction.Transaction;
 import java.math.BigDecimal;
 
 /**
