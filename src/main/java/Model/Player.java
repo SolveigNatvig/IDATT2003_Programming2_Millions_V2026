@@ -59,6 +59,15 @@ public class Player {
   }
 
   /**
+   * Returns the player's initial cash balance.
+   * 
+   * @return the players money at the start
+   */
+  public BigDecimal getStartingMoney() {
+    return this.startingMoney;
+  }
+
+  /**
    * Adds the specified amount to the player's cash balance.
    *
    * @param amount the amount to add. Cannot be null or negative
