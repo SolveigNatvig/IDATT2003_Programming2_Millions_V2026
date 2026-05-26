@@ -407,6 +407,8 @@ public class MainGameScene implements ExchangeObserver {
         }
       } catch (NumberFormatException ex) {
         alert("Error", "Enter a valid number for quantity");
+      } catch (IllegalArgumentException ex) {
+        alert("Error", ex.getMessage());
       }
     });
 
