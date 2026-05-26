@@ -5,14 +5,18 @@ package Model.Player;
  * Status levels are determined by trading activity (weeks with transactions)
  * and net worth performance compared to starting capital.
  * Levels:
+ * - ROOKIE: Net worth is 1/4 or less of starting capital (significant losses)
  * - NOVICE: Initial status (default)
  * - INVESTOR: 10+ weeks of trading AND net worth increased by 20%
  * - SPECULATOR: 20+ weeks of trading AND net worth doubled
+ * - TYCOON: 50+ weeks of trading AND net worth increased 5x 
  */
 public enum PlayerStatus {
+    ROOKIE("Rookie"),
     NOVICE("Novice"),
     INVESTOR("Investor"),
-    SPECULATOR("Speculator");
+    SPECULATOR("Speculator"),
+    TYCOON("Tycoon");
 
   private final String displayName;
 

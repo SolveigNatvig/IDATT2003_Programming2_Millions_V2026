@@ -115,9 +115,11 @@ public class Player {
   /**
   * Returns the player's current status based on trading activity and net worth performance.   
   * Status levels:
+  * - ROOKIE: Net worth is 1/4 or less of starting capital (significant losses)
   * - NOVICE: Starting level, no requirements
   * - INVESTOR: At least 10 weeks of trading AND net worth increased by at least 20%
   * - SPECULATOR: At least 20 weeks of trading AND net worth at least doubled
+  * - TYCOON: At least 50 weeks of trading AND net worth at least 5x 
   *
   * @return the player's current PlayerStatus
   */
@@ -127,6 +129,18 @@ public class Player {
         
     // Get number of weeks with trading activity
     int weeksActive = this.transactionArchive.countDistinctWeeks();
+    
+    // Check for ROOKIE status: net worth is 1/4 or less of starting capital (significant losses)
+    if (totalNetWorth.compareTo(this
+        .startingMoney.multiply(new BigDecimal("0.25"))) <= 0) {
+      return PlayerStatus.ROOKIE;
+    }
+    
+    // Check for TYCOON status: 50+ weeks AND net worth increased 5x
+    if (weeksActive >= 50 && totalNetWorth.compareTo(this
+        .startingMoney.multiply(new BigDecimal("5"))) >= 0) {
+      return PlayerStatus.TYCOON;
+    }
         
     // Check for SPECULATOR status: 20+ weeks AND net worth doubled
     if (weeksActive >= 20 && totalNetWorth.compareTo(this
