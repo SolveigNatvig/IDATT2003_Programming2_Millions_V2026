@@ -235,3 +235,19 @@
     -fx-border-color: -dark-colour;
     -fx-opacity: 0.4;
 }
+
+/* Bold label in stat dialogs (stock stats, end-game report) */
+.stat-label {
+    -fx-font-weight: bold;
+}
+
+/* Profit/loss colours in end-game report */
+.profit-label {
+    -fx-text-fill: rgb(46, 125, 50);
+    -fx-font-weight: bold;
+}
+
+.loss-label {
+    -fx-text-fill: rgb(183, 70, 70);
+    -fx-font-weight: bold;
+}
