@@ -53,9 +53,11 @@ public class MainGameScene implements ExchangeObserver {
 
   // References to UI components that need refreshing
   private TableView<PortfolioRow> portfolioTable;
+  private TableView<StockRow> table;
   private ListView<Share> holdingsList;
   private TableView<HistoryRow> historyTable;
   private ComboBox<Integer> weekFilterCombo;
+  private Runnable loadStocks;
 
   /**
    * Constructs the main game scene.
@@ -159,10 +161,10 @@ public class MainGameScene implements ExchangeObserver {
     filter.setItems(FXCollections.observableArrayList("All", "Gainers", "Losers"));
     filter.setValue("All");
 
-    TableView<StockRow> table = new TableView<>();
+    table = new TableView<>();
     addStockColumns(table);
 
-    Runnable loadStocks = () -> {
+    loadStocks = () -> {
       List<Stock> stocks;
       String filterVal = filter.getValue();
       String searchVal = search.getText().trim();
@@ -575,6 +577,9 @@ private void addStockColumns(TableView<StockRow> table) {
   }
 
   private void refreshAllUI() {
+    if (table != null && loadStocks != null) {
+      loadStocks.run();
+    }
     if (portfolioTable != null) {
       updatePortfolio(portfolioTable);
     }
