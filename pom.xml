@@ -5,14 +5,14 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>your.group.id</groupId>
-    <artifactId>your-artifact-id</artifactId>
+    <groupId>edu.ntnu.idi.idatt</groupId>
+    <artifactId>millions_group08</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>17</maven.compiler.source> <!-- or your Java version -->
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>25</maven.compiler.source> 
+        <maven.compiler.target>25</maven.compiler.target>
         <javafx.version>25.0.1</javafx.version>
         <junit.jupiter.version>6.0.1</junit.jupiter.version>
     </properties>
