@@ -1,0 +1,101 @@
+@startuml SequenceDiagram
+title Stock Trading Game - Buy Stock Transaction Sequence
+
+actor User as user
+participant "View" as view
+participant "Exchange" as exchange
+participant "Stock" as stock
+participant "Share" as share
+participant "Purchase" as purchase
+participant "Player" as player
+participant "Portfolio" as portfolio
+participant "PurchaseCalculator" as calc
+participant "TransactionArchive" as archive
+participant "Observer" as observer
+
+user -> view: Click Buy Button
+activate view
+view -> exchange: buy(symbol, quantity, player)
+activate exchange
+
+exchange -> exchange: Validate inputs
+exchange -> stock: getStock(symbol)
+activate stock
+stock --> exchange: Stock object
+deactivate stock
+
+exchange -> exchange: Check if stock exists
+
+exchange -> stock: getSalesPrice()
+activate stock
+stock --> exchange: BigDecimal price
+deactivate stock
+
+exchange -> share: new Share(stock, quantity, price)
+activate share
+share --> exchange: Share instance
+deactivate share
+
+exchange -> purchase: new Purchase(share, week)
+activate purchase
+purchase -> calc: new PurchaseCalculator(share)
+activate calc
+calc --> purchase: Calculator instance
+deactivate calc
+purchase --> exchange: Purchase instance
+deactivate purchase
+
+exchange -> purchase: commit(player)
+activate purchase
+
+purchase -> calc: calculateTotal()
+activate calc
+calc --> purchase: BigDecimal total cost
+deactivate calc
+
+purchase -> player: getMoney()
+activate player
+player --> purchase: BigDecimal current money
+deactivate player
+
+alt Sufficient Funds
+    purchase -> player: withdrawMoney(cost)
+    activate player
+    player -> player: Subtract from balance
+    deactivate player
+    
+    purchase -> portfolio: addShare(share)
+    activate portfolio
+    portfolio -> portfolio: Add share to list
+    portfolio --> purchase: true
+    deactivate portfolio
+    
+    purchase -> archive: add(this)
+    activate archive
+    archive -> archive: Add transaction to list
+    archive --> purchase: true
+    deactivate archive
+    
+    purchase -> purchase: committed = true
+    purchase --> exchange: void
+    
+else Insufficient Funds
+    purchase --> exchange: throw IllegalStateException
+end
+
+deactivate purchase
+
+exchange -> observer: notifyObservers()
+activate observer
+observer -> observer: Update UI state
+observer --> exchange: void
+deactivate observer
+
+exchange --> view: Transaction completed
+deactivate exchange
+
+view -> view: Refresh display
+view --> user: Show updated portfolio
+deactivate view
+
+@enduml

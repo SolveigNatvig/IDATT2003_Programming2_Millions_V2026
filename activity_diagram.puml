@@ -1,0 +1,38 @@
+@startuml ActivityDiagram
+!define START #90EE90
+!define END #FFB6C6
+!define DECISION #FFFFE6
+!define ACTION #E6F2FF
+
+title Stock Trading Game - Purchase Transaction Activity Diagram
+
+start
+:Player initiates purchase request;
+:Exchange.buy() called with symbol and quantity;
+
+if (Symbol valid and stock exists?) then (No)
+    :Throw IllegalArgumentException;
+    end
+else (Yes)
+    :Get Stock from exchange;
+    :Create Share with current market price;
+endif
+
+:Create Purchase transaction;
+
+if (Player has sufficient funds?) then (No)
+    :Throw IllegalStateException;
+    end
+else (Yes)
+    :Deduct purchase cost from player money;
+    :Add share to portfolio;
+    :Record transaction in archive;
+    :Mark transaction as committed;
+endif
+
+:Exchange notifies all observers;
+:UI updates with new portfolio state;
+
+stop
+
+@enduml
