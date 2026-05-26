@@ -1,0 +1,202 @@
+@startuml ClassDiagram
+!define ABSTRACT_COLOR #FFE6E6
+!define INTERFACE_COLOR #E6F2FF
+!define ENUM_COLOR #FFFFE6
+
+skinparam backgroundColor #FFFFFF
+skinparam classBackgroundColor #FFFFFF
+skinparam classBorderColor #333333
+
+package Model {
+    
+    ' Enums
+    enum PlayerStatus #FFFFE6 {
+        NOVICE
+        INVESTOR
+        SPECULATOR
+        --
+        getDisplayName(): String
+    }
+
+    ' Interfaces
+    interface ExchangeObserver #E6F2FF {
+        onExchangeUpdated(exchange: Exchange): void
+    }
+
+    ' Core Model Classes
+    class Player {
+        - name: String
+        - startingMoney: BigDecimal
+        - money: BigDecimal
+        - portfolio: Portfolio
+        - transactionArchive: TransactionArchive
+        --
+        + Player(name: String, startingMoney: BigDecimal)
+        + getName(): String
+        + getMoney(): BigDecimal
+        + addMoney(amount: BigDecimal): void
+        + withdrawMoney(amount: BigDecimal): void
+        + getPortfolio(): Portfolio
+        + getTransactionArchive(): TransactionArchive
+        + getStatus(): PlayerStatus
+    }
+
+    class Stock {
+        - symbol: String
+        - company: String
+        - prices: List<BigDecimal>
+        --
+        + Stock(symbol: String, company: String, salesPrice: BigDecimal)
+        + getSymbol(): String
+        + getCompany(): String
+        + getSalesPrice(): BigDecimal
+        + addNewSalesPrice(price: BigDecimal): void
+        + getHistoricalPrices(): List<BigDecimal>
+        + getHighestPrice(): BigDecimal
+        + getLowestPrice(): BigDecimal
+        + getLatestPriceChange(): BigDecimal
+    }
+
+    class Share {
+        - stock: Stock
+        - quantity: BigDecimal
+        - purchasePrice: BigDecimal
+        --
+        + Share(stock: Stock, quantity: BigDecimal, purchasePrice: BigDecimal)
+        + getStock(): Stock
+        + getQuantity(): BigDecimal
+        + getPurchasePrice(): BigDecimal
+    }
+
+    class Portfolio {
+        - shares: List<Share>
+        --
+        + Portfolio()
+        + addShare(share: Share): boolean
+        + removeShare(share: Share): boolean
+        + getShares(): List<Share>
+        + getShares(symbol: String): List<Share>
+        + contains(share: Share): boolean
+        + getNetWorth(): BigDecimal
+    }
+
+    class Exchange {
+        - name: String
+        - week: int
+        - stockMap: Map<String, Stock>
+        - observers: List<ExchangeObserver>
+        - random: Random
+        --
+        + Exchange(name: String, stocks: List<Stock>)
+        + addObserver(observer: ExchangeObserver): void
+        + removeObserver(observer: ExchangeObserver): void
+        - notifyObservers(): void
+        + getName(): String
+        + getWeek(): int
+        + hasStock(symbol: String): boolean
+        + getStock(symbol: String): Stock
+        + findStocks(searchTerm: String): List<Stock>
+        + buy(symbol: String, quantity: BigDecimal, player: Player): Transaction
+        + sell(share: Share, player: Player): Transaction
+        + sell(originalShare: Share, sellQuantity: BigDecimal, player: Player): Transaction
+        + advance(): void
+        + getGainers(limit: int): List<Stock>
+        + getLosers(limit: int): List<Stock>
+    }
+
+    ' Transaction Hierarchy
+    abstract class Transaction #FFE6E6 {
+        # share: Share
+        # week: int
+        # calculator: TransactionCalculator
+        # committed: boolean
+        --
+        # Transaction(share: Share, week: int, calculator: TransactionCalculator)
+        + getShare(): Share
+        + getWeek(): int
+        + getCalculator(): TransactionCalculator
+        + isCommitted(): boolean
+        + commit(player: Player): void {abstract}
+    }
+
+    class Purchase {
+        --
+        + Purchase(share: Share, week: int)
+        + commit(player: Player): void
+    }
+
+    class Sale {
+        --
+        + Sale(share: Share, week: int)
+        + commit(player: Player): void
+    }
+
+    class TransactionArchive {
+        - transactions: List<Transaction>
+        --
+        + TransactionArchive()
+        + add(transaction: Transaction): boolean
+        + isEmpty(): boolean
+        + getTransactions(week: int): List<Transaction>
+        + getPurchase(week: int): List<Purchase>
+        + getSale(week: int): List<Sale>
+        + getAllTransactions(): List<Transaction>
+        + countDistinctWeeks(): int
+    }
+
+    ' Calculator Classes
+    interface TransactionCalculator #E6F2FF {
+        calculateTotal(): BigDecimal
+    }
+
+    class PurchaseCalculator {
+        - share: Share
+        --
+        + PurchaseCalculator(share: Share)
+        + calculateTotal(): BigDecimal
+    }
+
+    class SaleCalculator {
+        - share: Share
+        --
+        + SaleCalculator(share: Share)
+        + calculateTotal(): BigDecimal
+    }
+
+    class TransactionFactory {
+        --
+        + {static} createPurchase(share: Share, week: int): Purchase
+        + {static} createSale(share: Share, week: int): Sale
+    }
+
+    ' Relationships
+    Player --> Portfolio : "has"
+    Player --> TransactionArchive : "has"
+    Player --> PlayerStatus : "has"
+    
+    Portfolio --> Share : "contains *"
+    
+    Share --> Stock : "references"
+    
+    Exchange --> Stock : "manages *"
+    Exchange --> ExchangeObserver : "notifies *"
+    Exchange --> Transaction : "creates"
+    
+    Transaction --> Share : "trades"
+    Transaction --> TransactionCalculator : "uses"
+    
+    Purchase --|> Transaction : "extends"
+    Sale --|> Transaction : "extends"
+    
+    PurchaseCalculator ..|> TransactionCalculator : "implements"
+    SaleCalculator ..|> TransactionCalculator : "implements"
+    
+    TransactionFactory --> Purchase : "creates"
+    TransactionFactory --> Sale : "creates"
+    
+    TransactionArchive --> Transaction : "stores *"
+    TransactionArchive --> Purchase : "retrieves"
+    TransactionArchive --> Sale : "retrieves"
+}
+
+@enduml
