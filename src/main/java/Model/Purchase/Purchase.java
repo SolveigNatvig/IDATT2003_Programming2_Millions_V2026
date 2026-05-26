@@ -44,7 +44,8 @@ public class Purchase extends Transaction {
 
     if (player.getMoney().compareTo(price) < 0) {
       throw new IllegalStateException(
-        "Insufficient funds: required " + price + ", available " + player.getMoney()
+        "Insufficient funds: required " + price.toPlainString()
+         + ", available " + player.getMoney().toPlainString()
       );
     }
 
